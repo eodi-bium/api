@@ -1,0 +1,33 @@
+services:
+  eodi-bium-test-db:
+    image: mysql:latest
+    container_name: eodi-bium-test-mysql
+    restart: no
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    expose:
+      - "3308"
+    ports:
+      - "3308:3306"
+    volumes:
+      - eodi-bium-test-mysql:/var/lib/mysql
+
+  eodi-bium-redis:
+    image: redis:latest
+    container_name: eodi-bium-test-redis
+    restart: no
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    expose:
+      - "6380"
+    ports:
+      - "6380:6379"
+    volumes:
+      - eodi-bium-test-redis:/data
+
+volumes:
+  eodi-bium-test-mysql:
+  eodi-bium-test-redis:
