@@ -1,0 +1,31 @@
+// bium/modules/member/member-impl/build.gradle
+
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    // (1) *** 가장 중요: 자신의 API(Interface) 모듈을 implementation
+    implementation project(':member:member-api')
+
+    // (2) 공통 모듈 의존
+    implementation project(':common')
+
+    // (3) *** 가장 중요: 다른 모듈의 *API* 모듈에만 의존
+    implementation project(':review:review-api')
+
+    // (4) *** 절대 금지: 다른 모듈의 *IMPL* 모듈에 의존
+    // implementation project(':modules:review:review-impl') // <-- X 금지 (컴파일 에러 발생)
+
+    // (5) 구현에 필요한 Spring 기술들
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // (6) DB 드라이버 (런타임에만 필요)
+    runtimeOnly 'com.mysql:mysql-connector-j'
+}
+
+
+jar {
+    enabled = true
+}
