@@ -1,5 +1,3 @@
-// bium/modules/app/build.gradle
-
 plugins {
     // (1) 이 모듈이 Spring Boot를 실행하는 주체임을 선언
     id 'org.springframework.boot'
@@ -7,7 +5,7 @@ plugins {
 
 dependencies {
     // (2) 공통 모듈 의존
-    implementation project(':common')
+    implementation project(':global')
 
     // (3) 각 도메인의 *구현체(impl)* 모듈을 런타임에 주입받음
     implementation project(':member:member-impl')

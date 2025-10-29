@@ -1,13 +1,15 @@
 package com.eodi.bium.dto;
 
+import jakarta.validation.constraints.NotNull;
+import java.net.URI;
 import java.util.UUID;
-import lombok.Getter;
 
-@Getter
-public class SubmitReviewRequest {
+public record SubmitReviewRequest(
+    @NotNull Long placeId,
+    @NotNull UUID memberId,
+    @NotNull Short start,
+    URI photoUrl,
+    @NotNull String content
+) {
 
-    private UUID memberId;
-    private Short start;
-    private String photoUrl;
-    private String content;
 }

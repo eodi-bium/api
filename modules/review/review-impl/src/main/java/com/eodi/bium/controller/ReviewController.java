@@ -1,19 +1,22 @@
 package com.eodi.bium.controller;
 
+import com.eodi.bium.ReviewService;
 import com.eodi.bium.dto.SubmitReviewRequest;
-import com.eodi.bium.review.api.ReviewService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/review")
+@RestController
+@RequestMapping("/review")
 @RequiredArgsConstructor
 public class ReviewController {
 
-    ReviewService reviewService;
+    private final ReviewService reviewService;
 
     @PostMapping("")
-    private void submitReview(SubmitReviewRequest request) {
+    private void submitReview(@Valid SubmitReviewRequest request) {
         reviewService.submitReview(request);
     }
 }

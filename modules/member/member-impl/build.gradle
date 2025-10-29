@@ -9,7 +9,7 @@ dependencies {
     implementation project(':member:member-api')
 
     // (2) 공통 모듈 의존
-    implementation project(':common')
+    implementation project(':global')
 
     // (3) *** 가장 중요: 다른 모듈의 *API* 모듈에만 의존
     implementation project(':review:review-api')

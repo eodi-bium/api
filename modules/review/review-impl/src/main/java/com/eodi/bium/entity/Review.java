@@ -6,10 +6,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.net.URI;
+import java.util.UUID;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Review {
 
@@ -22,12 +25,18 @@ public class Review {
 
     private Short star;
 
-    private Review(URI photoUrl, Short star) {
+    private Long placeId;
+
+    private UUID memberId;
+
+    private Review(URI photoUrl, Short star, UUID memberId, Long placeId) {
         this.photoUrl = photoUrl;
         this.star = star;
+        this.memberId = memberId;
+        this.placeId = placeId;
     }
 
-    public static Review create(URI photoUrl, Short star) {
-        return new Review(photoUrl, star);
+    public static Review create(URI photoUrl, Short star, UUID memberId, Long placeId) {
+        return new Review(photoUrl, star, memberId, placeId);
     }
 }
