@@ -12,8 +12,3 @@ dependencies {
 
     testImplementation project(':member:member-impl')
 }
-
-
-jar {
-    enabled = true
-}

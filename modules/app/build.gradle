@@ -1,29 +1,12 @@
 plugins {
-    // (1) 이 모듈이 Spring Boot를 실행하는 주체임을 선언
     id 'org.springframework.boot'
 }
 
 dependencies {
-    // (2) 공통 모듈 의존
     implementation project(':global')
-
-    // (3) 각 도메인의 *구현체(impl)* 모듈을 런타임에 주입받음
     implementation project(':member:member-impl')
     implementation project(':review:review-impl')
 
-    // (4) 실행에 필요한 핵심 의존성 (Web 등)
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    // (5) 설정 파일 자동 완성을 위한 의존성
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-}
-
-// (6) 이 모듈만 실행 가능한 'fat JAR'를 생성하도록 설정
-bootJar {
-    enabled = true
-}
-
-// (7) 'impl' 모듈들이 생성하는 'plain JAR'는 필요 없음
-jar {
-    enabled = false
 }
