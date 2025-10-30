@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ExceptionMessage {
-
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다"),
     AWS_SERVICE_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "아마존 웹 서비스에 문제가 발생했습니다."),
 
