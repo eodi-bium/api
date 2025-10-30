@@ -1,11 +1,9 @@
 rootProject.name = 'bium'
 
-// 리프 모듈만 include
 include ':app', ':global',
         ':member:member-api', ':member:member-impl',
         ':review:review-api', ':review:review-impl'
 
-// 실제 디렉터리 매핑 (modules/ 아래 물리 경로)
 project(':app').projectDir = file('modules/app')
 project(':global').projectDir = file('modules/global')
 
