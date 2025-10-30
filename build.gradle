@@ -1,23 +1,11 @@
-// bium/build.gradle
-
 plugins {
-    // (1) Spring Boot 플러그인 자체는 'app' 모듈에만 적용되지만,
-    // 버전 관리는 모든 모듈에 필요하므로 여기에 'apply false'로 선언합니다.
     id 'org.springframework.boot' version '3.2.0' apply false
-
-    // (2) Spring의 의존성 관리 플러그인 (버전 자동 관리)
     id 'io.spring.dependency-management' version '1.1.4' apply false
-
-    // (3) 모든 모듈은 Java 기반이므로 공통 적용
     id 'java'
 }
 
-// (4) 모든 하위 모듈(app, common, member-api 등)에 적용
 subprojects {
-    // (5) 공통으로 Java 플러그인 적용
     apply plugin: 'java'
-
-    // (6) Spring 의존성 관리 플러그인 적용
     apply plugin: 'io.spring.dependency-management'
 
     dependencyManagement {
@@ -26,9 +14,9 @@ subprojects {
         }
     }
 
-    group = 'com.eodi.bium' // 공통 그룹 ID
-    version = '0.0.1-SNAPSHOT' // 공통 버전
-    sourceCompatibility = '17' // 공통 Java 버전
+    group = 'com.eodi.bium'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '17'
 
     configurations {
         compileOnly {
@@ -41,11 +29,9 @@ subprojects {
     }
 
     dependencies {
-        // Lombok
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
 
-        // 테스트 공통
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testImplementation 'org.testcontainers:junit-jupiter:1.20.2'
         testImplementation 'org.testcontainers:mysql:1.20.2'
