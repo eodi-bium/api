@@ -31,7 +31,8 @@ public class ReviewServiceImpl implements ReviewService {
         Long placeId = request.placeId();
         // TODO place 서비스 다녀오기
 
-        Review review = Review.create(request.photoUrl(), request.start(), request.memberId(),
+        Review review = Review.create(request.photoUrl(), request.start(),
+            request.memberId(),
             placeId);
         reviewRepository.save(review);
 

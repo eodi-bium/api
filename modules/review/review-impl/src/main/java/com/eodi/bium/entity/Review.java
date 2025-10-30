@@ -21,7 +21,7 @@ public class Review {
     @Column(name = "review_id")
     private Long id;
 
-    private URI photoUrl;
+    private String photoUrl;
 
     private Short star;
 
@@ -29,7 +29,7 @@ public class Review {
 
     private UUID memberId;
 
-    private Review(URI photoUrl, Short star, UUID memberId, Long placeId) {
+    private Review(String photoUrl, Short star, UUID memberId, Long placeId) {
         this.photoUrl = photoUrl;
         this.star = star;
         this.memberId = memberId;
@@ -37,6 +37,6 @@ public class Review {
     }
 
     public static Review create(URI photoUrl, Short star, UUID memberId, Long placeId) {
-        return new Review(photoUrl, star, memberId, placeId);
+        return new Review(photoUrl.toString(), star, memberId, placeId);
     }
 }
