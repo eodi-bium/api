@@ -1,8 +1,7 @@
-package com.eodi.bium.service;
+package com.eodi.bium;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-import com.eodi.bium.ReviewService;
 import com.eodi.bium.dto.SubmitReviewRequest;
 import com.eodi.bium.repository.ReviewRepository;
 import org.junit.jupiter.api.Test;

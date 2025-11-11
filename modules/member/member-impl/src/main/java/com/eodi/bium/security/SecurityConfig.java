@@ -143,7 +143,7 @@ public class SecurityConfig {
     public static class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         private final TokenRotationService tokenRotationService;
-        @Value("${q-asker.frontend-deploy-url}")
+        @Value("${bium.frontend-deploy-url}")
         private String frontendDeployUrl;
 
         @Override

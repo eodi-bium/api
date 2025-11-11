@@ -13,8 +13,6 @@ public enum ExceptionMessage {
     NO_FILE_UPLOADED(HttpStatus.BAD_REQUEST, "파일이 업로드되지 않았습니다."),
     FILE_NAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "파일 이름이 존재하지 않습니다");
 
-
     private final HttpStatus httpStatus;
     private final String message;
-
 }

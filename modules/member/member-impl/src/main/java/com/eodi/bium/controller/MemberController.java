@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
-public class AuthController {
+@RequestMapping("/member")
+public class MemberController {
 
     private final NormalJoinService normalJoinService;
     private final NormalLoginService normalLoginService;
@@ -38,7 +38,7 @@ public class AuthController {
     public ResponseEntity<LoginResponse> normalLogin(@RequestBody LoginRequest loginRequest,
         HttpServletResponse response) {
         LoginResponse loginResponse = normalLoginService.getNickname(loginRequest);
-        tokenRotationService.issueTokens(loginRequest.getMemberId(), response);
+        tokenRotationService.issueTokens(loginRequest.getId(), response);
         return ResponseEntity.ok(loginResponse);
     }
 

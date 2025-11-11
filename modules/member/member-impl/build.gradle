@@ -24,3 +24,7 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
 
 }
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += '-parameters'
+}

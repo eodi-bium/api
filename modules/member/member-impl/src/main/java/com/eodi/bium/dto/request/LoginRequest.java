@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 public class LoginRequest {
 
-    @NotNull(message = "memberId가 null입니다.")
-    private String memberId;
-    @NotNull(message = "password가 null입니다.")
+    @NotNull
+    private String id;
+    @NotNull
     private String password;
 }

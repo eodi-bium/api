@@ -14,7 +14,6 @@ public enum ExceptionMessage {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."),
     NOT_ENOUGH_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 부족합니다.");
 
-
     private final HttpStatus httpStatus;
     private final String message;
 }

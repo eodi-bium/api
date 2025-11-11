@@ -18,7 +18,7 @@ public class NormalLoginService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public LoginResponse getNickname(LoginRequest loginRequest) {
-        String memberId = loginRequest.getMemberId();
+        String memberId = loginRequest.getId();
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new CustomException(ExceptionMessage.USER_NOT_FOUND));
 
