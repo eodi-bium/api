@@ -3,7 +3,7 @@ package com.eodi.bium;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 import com.eodi.bium.dto.SubmitReviewRequest;
-import com.eodi.bium.repository.ReviewRepository;
+import com.eodi.bium.global.member.repository.ReviewRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

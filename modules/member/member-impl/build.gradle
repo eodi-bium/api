@@ -3,13 +3,9 @@ plugins {
 }
 
 dependencies {
-//  *** 절대 금지: 다른 모듈의 *IMPL* 모듈에 의존
-//  implementation project(':modules:review:review-impl')
-
-//  *** 절대 준수: 다른 모듈의 *API* 모듈에 의존
+    implementation project(':global')
     implementation project(':member:member-api')
     implementation project(':review:review-api')
-    implementation project(':global')
 
 
     // ────────────────────────────────
@@ -23,8 +19,4 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += '-parameters'
 }

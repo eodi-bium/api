@@ -3,10 +3,10 @@ plugins {
 }
 
 dependencies {
+    implementation project(':global')
     implementation project(':member:member-api')
     implementation project(':review:review-api')
 
-    implementation project(':global')
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
