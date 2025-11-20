@@ -3,15 +3,20 @@ plugins {
 }
 
 dependencies {
-//  *** 절대 금지: 다른 모듈의 *IMPL* 모듈에 의존
-//  implementation project(':modules:review:review-impl')
-
-//  *** 절대 준수: 다른 모듈의 *API* 모듈에 의존
+    implementation project(':global')
     implementation project(':member:member-api')
     implementation project(':review:review-api')
-    implementation project(':global')
 
+
+    // ────────────────────────────────
+    // 인증 및 JWT
+    // ────────────────────────────────
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
+    implementation "com.auth0:java-jwt:4.5.0"
+
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.mysql:mysql-connector-j'
+
 }

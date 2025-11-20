@@ -2,7 +2,8 @@ rootProject.name = 'bium'
 
 include ':app', ':global',
         ':member:member-api', ':member:member-impl',
-        ':review:review-api', ':review:review-impl'
+        ':review:review-api', ':review:review-impl',
+        ':auth:auth-impl'
 
 project(':app').projectDir = file('modules/app')
 project(':global').projectDir = file('modules/global')
@@ -12,3 +13,4 @@ project(':member:member-impl').projectDir = file('modules/member/member-impl')
 
 project(':review:review-api').projectDir = file('modules/review/review-api')
 project(':review:review-impl').projectDir = file('modules/review/review-impl')
+project(':auth:auth-impl').projectDir = file('modules/auth/auth-impl')

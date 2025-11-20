@@ -1,0 +1,32 @@
+package com.eodi.bium.global.member.service;
+
+import com.eodi.bium.global.error.CustomException;
+import com.eodi.bium.global.error.ExceptionMessage;
+import com.eodi.bium.global.member.dto.request.LoginRequest;
+import com.eodi.bium.global.member.dto.response.LoginResponse;
+import com.eodi.bium.global.member.entity.Member;
+import com.eodi.bium.global.member.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class NormalLoginService {
+
+    private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public LoginResponse getNickname(LoginRequest loginRequest) {
+        String memberId = loginRequest.getId();
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new CustomException(ExceptionMessage.USER_NOT_FOUND));
+
+        if (!bCryptPasswordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
+            throw new CustomException(ExceptionMessage.INVALID_PASSWORD);
+        }
+        System.out.println("로그인 완료: " + member.getMemberId() + " 닉네임: " + member.getNickname());
+        return LoginResponse.builder()
+            .nickname(member.getNickname()).build();
+    }
+}
