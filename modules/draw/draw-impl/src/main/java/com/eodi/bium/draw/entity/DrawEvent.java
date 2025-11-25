@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,4 +25,14 @@ public class DrawEvent {
     private String giftPicture;
 
     private String winnerId;
+
+    @Builder
+    private DrawEvent(String giftName, String giftPicture) {
+        this.giftName = giftName;
+        this.giftPicture = giftPicture;
+    }
+
+    public void setWinnerId(String winnerId) {
+        this.winnerId = winnerId;
+    }
 }
