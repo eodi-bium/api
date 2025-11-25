@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation project(':global')
+    implementation project(':draw:draw-api')
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
