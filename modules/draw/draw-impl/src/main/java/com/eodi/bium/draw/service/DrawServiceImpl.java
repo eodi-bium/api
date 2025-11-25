@@ -3,6 +3,7 @@ package com.eodi.bium.draw.service;
 import com.eodi.bium.draw.DrawService;
 import com.eodi.bium.draw.dto.request.DrawPointRequest;
 import com.eodi.bium.draw.dto.request.DrawStartRequest;
+import com.eodi.bium.draw.dto.response.DrawResultResponse;
 import com.eodi.bium.draw.entity.DrawEvent;
 import com.eodi.bium.draw.entity.DrawPoint;
 import com.eodi.bium.draw.repsoitory.DrawEventRepository;
@@ -13,18 +14,15 @@ import com.eodi.bium.review.error.ExceptionMessage;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class DrawServiceImpl implements DrawService {
 
     private final DrawEventRepository drawEventRepository;
     private final DrawPointRepository drawPointRepository;
 
     @Override
-    @Transactional
     public void joinDraw(DrawPointRequest request) {
         DrawPoint drawPoint = DrawPoint.builder()
             .recordId(request.recordId())
@@ -37,7 +35,7 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Override
-    public void startDraw(DrawStartRequest request) {
+    public DrawResultResponse startDraw(DrawStartRequest request) {
         DrawEvent drawEvent = drawEventRepository.findById(request.eventId()).orElseThrow(
             () -> new CustomException(ExceptionMessage.INTERNAL_SERVER_ERROR)
         );
@@ -71,7 +69,8 @@ public class DrawServiceImpl implements DrawService {
                 );
                 System.out.println("당첨자 발생!!: " + item.memberId());
                 drawEvent.setWinnerId(item.memberId());
-                return;
+                drawEventRepository.save(drawEvent);
+                return new DrawResultResponse(item.memberId());
             }
         }
 

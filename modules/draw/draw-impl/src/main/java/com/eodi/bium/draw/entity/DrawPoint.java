@@ -1,5 +1,6 @@
 package com.eodi.bium.draw.entity;
 
+import com.eodi.bium.review.entity.CreatedAt;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "draw_point") // 테이블 이름 예시
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DrawPoint {
+public class DrawPoint extends CreatedAt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,10 +33,10 @@ public class DrawPoint {
     private String memberId;
 
     @Column(name = "point", nullable = false)
-    private Integer point;
+    private Long point;
 
     @Builder
-    public DrawPoint(Long eventId, String memberId, Integer point, Long recordId) {
+    public DrawPoint(Long eventId, String memberId, Long point, Long recordId) {
         this.recordId = recordId;
         this.eventId = eventId;
         this.memberId = memberId;

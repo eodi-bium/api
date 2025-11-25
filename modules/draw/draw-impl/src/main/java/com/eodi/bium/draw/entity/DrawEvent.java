@@ -1,5 +1,6 @@
 package com.eodi.bium.draw.entity;
 
+import com.eodi.bium.review.entity.CreatedAt;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,11 +10,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DrawEvent {
+public class DrawEvent extends CreatedAt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,15 +26,12 @@ public class DrawEvent {
 
     private String giftPicture;
 
+    @Setter
     private String winnerId;
 
     @Builder
     private DrawEvent(String giftName, String giftPicture) {
         this.giftName = giftName;
         this.giftPicture = giftPicture;
-    }
-
-    public void setWinnerId(String winnerId) {
-        this.winnerId = winnerId;
     }
 }
