@@ -3,7 +3,7 @@ package com.eodi.bium.service;
 import com.eodi.bium.MemberService;
 import com.eodi.bium.ReviewService;
 import com.eodi.bium.dto.SubmitReviewRequest;
-import com.eodi.bium.dto.dto.Member.MemberResponse;
+import com.eodi.bium.dto.Member.MemberResponse;
 import com.eodi.bium.entity.Review;
 import com.eodi.bium.repository.ReviewRepository;
 import java.util.Optional;

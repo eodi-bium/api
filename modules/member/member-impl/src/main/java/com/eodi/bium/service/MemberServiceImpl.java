@@ -1,7 +1,7 @@
 package com.eodi.bium.service;
 
 import com.eodi.bium.MemberService;
-import com.eodi.bium.dto.dto.Member.MemberResponse;
+import com.eodi.bium.dto.Member.MemberResponse;
 import com.eodi.bium.entity.Member;
 import com.eodi.bium.repository.MemberRepository;
 import java.util.Optional;

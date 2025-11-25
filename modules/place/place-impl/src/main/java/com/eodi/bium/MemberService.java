@@ -1,6 +1,6 @@
 package com.eodi.bium;
 
-import com.eodi.bium.dto.dto.Member.MemberResponse;
+import com.eodi.bium.dto.Member.MemberResponse;
 import java.util.Optional;
 import java.util.UUID;
 

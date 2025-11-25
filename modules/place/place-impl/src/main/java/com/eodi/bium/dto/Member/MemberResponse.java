@@ -1,4 +1,4 @@
-package com.eodi.bium.dto.dto.Member;
+package com.eodi.bium.dto.Member;
 
 import java.util.UUID;
 
