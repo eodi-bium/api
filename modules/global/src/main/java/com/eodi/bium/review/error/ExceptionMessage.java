@@ -21,7 +21,8 @@ public enum ExceptionMessage {
     NOT_ENOUGH_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 부족합니다."),
 
 
-    EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "이벤트를 찾을 수 없습니다.");
+    EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "이벤트를 찾을 수 없습니다."),
+    DRAW_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "추첨이 이미 완료되었습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

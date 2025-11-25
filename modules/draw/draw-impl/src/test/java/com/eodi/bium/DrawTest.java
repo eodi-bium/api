@@ -1,6 +1,7 @@
 package com.eodi.bium;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.eodi.bium.draw.dto.request.DrawPointRequest;
 import com.eodi.bium.draw.dto.request.DrawStartRequest;
@@ -67,6 +68,35 @@ class DrawTest {
 
         //then
         Assertions.assertTrue(joinedMembers.contains(drawEvent.getWinnerId()));
+    }
+
+    @Test
+    public void 추첨이_이미_끝났으면_오류가_발생한다() {
+        //given
+        DrawEvent sampleEvent = DrawEvent.builder()
+            .giftName("Sample Gift")
+            .giftPicture("sample.jpg")
+            .build();
+
+        // 실제 DB에 저장하여 ID 생성
+        DrawEvent savedEvent = drawEventRepository.save(sampleEvent);
+        Long eventId = savedEvent.getId();
+
+        // 추첨을 위한 최소 참여자 추가
+        drawService.joinDraw(
+            new DrawPointRequest(1L, eventId, "KAKAO_USER", 10)
+        );
+
+        // 첫 번째 추첨 진행 (정상 완료되어 winnerId가 설정됨)
+        drawService.startDraw(new DrawStartRequest(eventId));
+
+        //when & then
+        // 이미 추첨된 이벤트에 대해 다시 startDraw 호출 시 예외 발생 검증
+        assertThatThrownBy(() ->
+                drawService.startDraw(new DrawStartRequest(eventId))
+            )
+            .isInstanceOf(CustomException.class)
+            .hasMessage(ExceptionMessage.DRAW_ALREADY_COMPLETED.getMessage());
     }
 
     @Test

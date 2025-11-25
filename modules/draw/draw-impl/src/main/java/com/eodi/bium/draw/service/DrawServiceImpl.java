@@ -38,6 +38,12 @@ public class DrawServiceImpl implements DrawService {
 
     @Override
     public void startDraw(DrawStartRequest request) {
+        DrawEvent drawEvent = drawEventRepository.findById(request.eventId()).orElseThrow(
+            () -> new CustomException(ExceptionMessage.INTERNAL_SERVER_ERROR)
+        );
+        if (drawEvent.getWinnerId() != null) {
+            throw new CustomException(ExceptionMessage.DRAW_ALREADY_COMPLETED);
+        }
         List<DrawPointView> candidates = drawPointRepository.findByEventId(request.eventId());
         int totalWeight = 0;
         for (DrawPointView item : candidates) {
@@ -60,7 +66,7 @@ public class DrawServiceImpl implements DrawService {
 
             // 현재 아이템의 구간에 랜덤값이 포함되는지 확인
             if (randomValue < currentWeight) {
-                DrawEvent drawEvent = drawEventRepository.findById(request.eventId()).orElseThrow(
+                drawEvent = drawEventRepository.findById(request.eventId()).orElseThrow(
                     () -> new CustomException(ExceptionMessage.INTERNAL_SERVER_ERROR)
                 );
                 System.out.println("당첨자 발생!!: " + item.memberId());
