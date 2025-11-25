@@ -5,8 +5,8 @@ import java.net.URI;
 
 public record SubmitReviewRequest(
     @NotNull Long placeId,
-    @NotNull String memberId,
-    @NotNull Short start,
+    @NotNull Long memberId,
+    @NotNull Short star,
     URI photoUrl,
     @NotNull String content
 ) {

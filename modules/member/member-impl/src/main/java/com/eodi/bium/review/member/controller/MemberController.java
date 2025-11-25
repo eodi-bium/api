@@ -3,7 +3,7 @@ package com.eodi.bium.review.member.controller;
 import com.eodi.bium.review.member.dto.request.LoginRequest;
 import com.eodi.bium.review.member.dto.response.LoginResponse;
 import com.eodi.bium.review.member.service.LogoutService;
-import com.eodi.bium.review.member.service.MyPageService;
+import com.eodi.bium.review.member.service.MemberServiceImpl;
 import com.eodi.bium.review.member.service.TokenRotationService;
 import com.eodi.bium.review.member.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/member")
 public class MemberController {
 
-    private final MyPageService myPageService;
+    private final MemberServiceImpl memberServiceImpl;
     private final TokenRotationService tokenRotationService;
     private final LogoutService logoutService;
 
@@ -28,7 +28,7 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> normalLogin(@RequestBody LoginRequest loginRequest,
         HttpServletResponse response) {
-        LoginResponse loginResponse = myPageService.getNickname(loginRequest);
+        LoginResponse loginResponse = memberServiceImpl.getNickname(loginRequest);
         tokenRotationService.issueTokens(loginRequest.getId(), response);
         return ResponseEntity.ok(loginResponse);
     }

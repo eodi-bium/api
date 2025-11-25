@@ -20,6 +20,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -69,8 +71,14 @@ public class JwtTokenAuthenticationFilter extends BasicAuthenticationFilter {
             String role = Objects.toString(member.getRole(), "ROLE_USER");
             var authorities = List.of(new SimpleGrantedAuthority(role));
 
+            UserDetails principal = User.builder()
+                .username(member.getMemberId())
+                .password(member.getPassword() != null ? member.getPassword() : "")
+                .authorities(authorities)
+                .build();
+
             UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(member, null,
+                new UsernamePasswordAuthenticationToken(principal, null,
                     authorities);
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
