@@ -7,7 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.eodi.bium.review.member.entity.Member;
 import com.eodi.bium.review.member.properties.JwtProperties;
-import com.eodi.bium.review.member.repository.MemberRepository;
+import com.eodi.bium.review.repository.MemberRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

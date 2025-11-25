@@ -1,9 +1,13 @@
 package com.eodi.bium.review;
 
 
-import com.eodi.bium.review.dto.SubmitReviewRequest;
+import com.eodi.bium.review.dto.ReviewResponse;
+import com.eodi.bium.review.dto.request.SubmitReviewRequest;
+import java.util.List;
 
 public interface ReviewService {
 
     void submitReview(SubmitReviewRequest request);
+
+    List<ReviewResponse> getReviewsByPlaceId(Long placeId);
 }

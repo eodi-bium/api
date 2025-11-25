@@ -5,5 +5,7 @@ import com.eodi.bium.review.member.dto.response.LoginResponse;
 
 public interface MemberService {
 
-    LoginResponse getNickname(LoginRequest loginRequest);
+    LoginResponse login(LoginRequest loginRequest);
+
+    LoginResponse getNickname(String memberId);
 }

@@ -2,10 +2,10 @@ package com.eodi.bium.review.member.controller;
 
 import com.eodi.bium.review.member.dto.request.LoginRequest;
 import com.eodi.bium.review.member.dto.response.LoginResponse;
-import com.eodi.bium.review.member.service.LogoutService;
-import com.eodi.bium.review.member.service.MemberServiceImpl;
-import com.eodi.bium.review.member.service.TokenRotationService;
 import com.eodi.bium.review.member.util.CookieUtil;
+import com.eodi.bium.review.service.LogoutService;
+import com.eodi.bium.review.service.MemberServiceImpl;
+import com.eodi.bium.review.service.TokenRotationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> normalLogin(@RequestBody LoginRequest loginRequest,
         HttpServletResponse response) {
-        LoginResponse loginResponse = memberServiceImpl.getNickname(loginRequest);
+        LoginResponse loginResponse = memberServiceImpl.login(loginRequest);
         tokenRotationService.issueTokens(loginRequest.getId(), response);
         return ResponseEntity.ok(loginResponse);
     }

@@ -2,15 +2,15 @@ package com.eodi.bium.review.member.security;
 
 import com.eodi.bium.review.error.ExceptionMessage;
 import com.eodi.bium.review.member.entity.Member;
-import com.eodi.bium.review.member.repository.MemberRepository;
 import com.eodi.bium.review.member.security.filter.JwtTokenAuthenticationFilter;
 import com.eodi.bium.review.member.security.filter.RefreshRotationFilter;
 import com.eodi.bium.review.member.security.principal.PrincipalDetails;
 import com.eodi.bium.review.member.security.provider.GoogleUserInfo;
 import com.eodi.bium.review.member.security.provider.KakaoUserInfo;
 import com.eodi.bium.review.member.security.provider.OAuth2UserInfo;
-import com.eodi.bium.review.member.service.TokenRotationService;
 import com.eodi.bium.review.member.util.NicknameGenerateUtil;
+import com.eodi.bium.review.repository.MemberRepository;
+import com.eodi.bium.review.service.TokenRotationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class SecurityConfig {
     public SecurityFilterChain apiFilterChain(HttpSecurity http,
         AuthenticationManager authenticationManager) throws Exception {
         http
-            .securityMatcher("/statistics/**", "/admin/**", "/test")
+            .securityMatcher("/statistics/**", "/admin/**", "/test", "/review/submit")
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -82,6 +82,7 @@ public class SecurityConfig {
                 .requestMatchers("/statistics/**").authenticated()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/test").authenticated()
+                .requestMatchers("/review/submit").authenticated()
                 .anyRequest().denyAll() // 이 필터 체인에 해당하지만 위에서 명시되지 않은 다른 모든 요청은 거부
             );
         return http.build();

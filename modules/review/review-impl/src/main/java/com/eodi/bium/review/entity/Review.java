@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.net.URI;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,19 +25,23 @@ public class Review {
 
     private Short star;
 
-
     private Long placeId;
 
-    private Long memberId;
+    private String content;
 
-    private Review(String photoUrl, Short star, Long memberId, Long placeId) {
+    private String memberId;
+
+    private Review(String photoUrl, Short star, String memberId, String content, Long placeId) {
         this.photoUrl = photoUrl;
         this.star = star;
         this.memberId = memberId;
+        this.content = content;
         this.placeId = placeId;
     }
 
-    public static Review create(URI photoUrl, Short star, Long memberId, Long placeId) {
-        return new Review(photoUrl.toString(), star, memberId, placeId);
+    @Builder
+    public static Review create(URI photoUrl, Short star, String memberId, String content,
+        Long placeId) {
+        return new Review(photoUrl.toString(), star, memberId, content, placeId);
     }
 }

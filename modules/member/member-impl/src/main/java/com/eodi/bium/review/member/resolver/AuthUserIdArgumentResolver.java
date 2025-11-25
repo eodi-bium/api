@@ -19,7 +19,7 @@ public class AuthUserIdArgumentResolver implements HandlerMethodArgumentResolver
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(AuthUserId.class)
-            && parameter.getParameterType().equals(Long.class);
+            && parameter.getParameterType().equals(String.class);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class AuthUserIdArgumentResolver implements HandlerMethodArgumentResolver
 
         Object principal = authentication.getPrincipal();
         if (principal instanceof UserDetails userDetails) {
-            return Long.parseLong(userDetails.getUsername());
+            return userDetails.getUsername();
         }
 
         throw new CustomException(ExceptionMessage.UNAUTHORIZED);

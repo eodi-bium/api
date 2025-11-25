@@ -1,4 +1,4 @@
-package com.eodi.bium.review.member.repository;
+package com.eodi.bium.review.repository;
 
 import com.eodi.bium.review.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
