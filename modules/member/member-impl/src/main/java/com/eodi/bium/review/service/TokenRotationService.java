@@ -1,4 +1,4 @@
-package com.eodi.bium.review.member.service;
+package com.eodi.bium.review.service;
 
 import com.eodi.bium.review.member.component.AccessTokenHandler;
 import com.eodi.bium.review.member.util.CookieUtil;

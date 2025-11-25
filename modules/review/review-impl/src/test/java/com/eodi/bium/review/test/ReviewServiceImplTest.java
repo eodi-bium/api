@@ -1,91 +1,85 @@
 package com.eodi.bium.review.test;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import com.eodi.bium.review.dto.SubmitReviewRequest;
-import com.eodi.bium.review.error.CustomException;
-import com.eodi.bium.review.error.ExceptionMessage;
-import com.eodi.bium.review.member.entity.Member;
-import com.eodi.bium.review.member.repository.MemberRepository;
-import com.eodi.bium.review.member.repository.ReviewRepository;
-import com.eodi.bium.review.member.service.ReviewServiceImpl;
+import com.eodi.bium.review.dto.ReviewResponse;
+import com.eodi.bium.review.dto.request.SubmitReviewRequest;
+import com.eodi.bium.review.entity.Review;
+import com.eodi.bium.review.repository.ReviewRepository;
+import com.eodi.bium.review.service.ReviewServiceImpl;
 import java.net.URI;
+import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@SpringBootTest
-@Testcontainers
+@ExtendWith(MockitoExtension.class)
 class ReviewServiceImplTest {
 
-    @Container
-    static MySQLContainer<?> db = new MySQLContainer<>("mysql:8.4")
-        .withReuse(true);
-
-    @Autowired
+    @InjectMocks
     ReviewServiceImpl reviewService;
-    @Autowired
-    ReviewRepository reviewRepository;
-    @Autowired
-    private MemberRepository memberRepository;
 
-    @DynamicPropertySource
-    static void datasourceProps(DynamicPropertyRegistry r) {
-        r.add("spring.datasource.url", db::getJdbcUrl);
-        r.add("spring.datasource.username", db::getUsername);
-        r.add("spring.datasource.password", db::getPassword);
-        r.add("spring.jpa.hibernate.ddl-auto", () -> "create");
-    }
+    @Mock
+    ReviewRepository reviewRepository;
 
     @Test
-    @Transactional
-    void 회원가입한_멤버는_리뷰_제출에_성공한다() {
+    void 리뷰_제출() {
         // given
         String memberId = "1";
         SubmitReviewRequest req = new SubmitReviewRequest(100L, memberId, (short) 5,
             URI.create("https://x/y.jpg"), "굿");
-        memberRepository.save(
-            Member.builder().memberId(memberId).role("USER").password("password").provider("KAKAO")
-                .nickname("참새")
-                .build());
+
+        // when
+        reviewService.submitReview(req);
+        reviewService.submitReview(req);
+        reviewService.submitReview(req);
+
+        // then
+        ArgumentCaptor<Review> captor = ArgumentCaptor.forClass(Review.class);
+        verify(reviewRepository).save(captor.capture());
+
+        Review saved = captor.getValue();
+        assertThat(saved.getMemberId()).isEqualTo(memberId);
+        assertThat(saved.getPlaceId()).isEqualTo(100L);
+    }
+
+    @Test
+    void 특정장소_리뷰_제출() {
+        // given
+        String memberId = "1";
+        SubmitReviewRequest req = new SubmitReviewRequest(100L, memberId, (short) 5,
+            URI.create("https://x/y.jpg"), "굿");
 
         // when
         reviewService.submitReview(req);
 
         // then
-        var saved = reviewRepository.findAll();
-        assertThat(saved).hasSize(1);
-        assertThat(saved.get(0).getMemberId()).isEqualTo(memberId);
-        assertThat(saved.get(0).getPlaceId()).isEqualTo(100L);
+        ArgumentCaptor<Review> captor = ArgumentCaptor.forClass(Review.class);
+        verify(reviewRepository).save(captor.capture());
+
+        Review saved = captor.getValue();
+        assertThat(saved.getMemberId()).isEqualTo(memberId);
+        assertThat(saved.getPlaceId()).isEqualTo(100L);
     }
 
     @Test
-    @Transactional
-    void 회원가입하지않으면_리뷰_제출시_오류가_발생한다() {
+    void 특정장소_리뷰_조회() {
         // given
-        String memberId = "1";
-        SubmitReviewRequest req = new SubmitReviewRequest(
-            100L, memberId, (short) 5,
-            URI.create("https://x/y.jpg"), "굿"
-        );
+        Long placeId = 100L;
+        ReviewResponse response = new ReviewResponse("nickname", "굿", (short) 5, "https://x.y/z.jpg");
 
-        // when, then
-        assertThatThrownBy(() -> reviewService.submitReview(req))
-            .isInstanceOf(CustomException.class)
-            .hasMessage(ExceptionMessage.NOT_ENOUGH_ACCESS.getMessage());
-    }
+        when(reviewRepository.findAllByPlaceId(placeId)).thenReturn(List.of(response));
 
-    @SpringBootApplication(scanBasePackages = "com.eodi.bium")
-    static class TestApp {
+        // when
+        List<ReviewResponse> result = reviewService.getReviewsByPlaceId(placeId);
 
+        // then
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0)).isEqualTo(response);
     }
 }
