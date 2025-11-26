@@ -6,6 +6,7 @@ dependencies {
     implementation project(':global')
     implementation project(':member:member-impl')
     implementation project(':review:review-impl')
+    implementation project(':place:place-impl')
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'

@@ -14,6 +14,7 @@ services:
       - "3308:3306"
     volumes:
       - eodi-bium-test-mysql:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   eodi-bium-redis:
     image: redis:latest

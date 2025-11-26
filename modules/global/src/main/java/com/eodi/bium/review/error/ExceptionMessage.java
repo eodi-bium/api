@@ -18,7 +18,9 @@ public enum ExceptionMessage {
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다."),
     TOKEN_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "토큰 생성 중 서버 오류가 발생했습니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."),
-    NOT_ENOUGH_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 부족합니다.");
+    NOT_ENOUGH_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 부족합니다."),
+
+    PLACES_NOT_FOUND(HttpStatus.NOT_FOUND, "장소들이 존재하지 않습니다. ");
 
 
     private final HttpStatus httpStatus;

@@ -34,10 +34,8 @@ public class RefreshRotationFilter extends OncePerRequestFilter {
             || path.startsWith("/oauth2")
             || path.startsWith("/login/oauth2")
             || path.startsWith("/s3/upload")
-            || path.startsWith("/explanation/")
-            || path.startsWith("/problem-set/")
-            || path.startsWith("/specific-explanation/")
-            || path.startsWith("/generation");
+            || path.startsWith("/place");
+
     }
 
     @Override
