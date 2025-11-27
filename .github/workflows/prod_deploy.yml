@@ -3,7 +3,7 @@ name: Deploy to EC2 (Spring Boot + Docker)
 on:
   push:
     branches:
-      - main
+      - CSE-22-cicd
   workflow_dispatch:
 
 env:
