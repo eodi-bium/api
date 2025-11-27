@@ -1,4 +1,4 @@
-package com.eodi.bium.review.error;
+package com.eodi.bium.global.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

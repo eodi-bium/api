@@ -1,4 +1,4 @@
-package com.eodi.bium.review.annotation;
+package com.eodi.bium.global.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

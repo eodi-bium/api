@@ -1,8 +1,8 @@
 package com.eodi.bium.review.member.resolver;
 
-import com.eodi.bium.review.annotation.AuthUserId;
-import com.eodi.bium.review.error.CustomException;
-import com.eodi.bium.review.error.ExceptionMessage;
+import com.eodi.bium.global.annotation.AuthUserId;
+import com.eodi.bium.global.error.CustomException;
+import com.eodi.bium.global.error.ExceptionMessage;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

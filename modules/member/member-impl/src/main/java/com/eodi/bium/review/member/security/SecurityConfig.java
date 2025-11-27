@@ -1,6 +1,6 @@
 package com.eodi.bium.review.member.security;
 
-import com.eodi.bium.review.error.ExceptionMessage;
+import com.eodi.bium.global.error.ExceptionMessage;
 import com.eodi.bium.review.member.entity.Member;
 import com.eodi.bium.review.member.security.filter.JwtTokenAuthenticationFilter;
 import com.eodi.bium.review.member.security.filter.RefreshRotationFilter;

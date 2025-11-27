@@ -5,8 +5,6 @@ import com.eodi.bium.place.dto.response.PlaceResponse;
 import com.eodi.bium.place.entity.Place;
 import com.eodi.bium.place.mapper.PlaceResponseMapper;
 import com.eodi.bium.place.repository.PlaceRepository;
-import com.eodi.bium.review.error.CustomException;
-import com.eodi.bium.review.error.ExceptionMessage;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
