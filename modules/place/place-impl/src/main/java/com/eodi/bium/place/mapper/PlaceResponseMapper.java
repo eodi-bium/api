@@ -1,7 +1,7 @@
 package com.eodi.bium.place.mapper;
 
-import com.eodi.bium.place.dto.PlaceResponse;
-import com.eodi.bium.place.dto.SinglePlaceResponse;
+import com.eodi.bium.place.dto.response.PlaceResponse;
+import com.eodi.bium.place.dto.response.SinglePlaceResponse;
 import com.eodi.bium.place.entity.Place;
 import java.util.List;
 

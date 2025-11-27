@@ -1,4 +1,4 @@
-package com.eodi.bium.place.dto;
+package com.eodi.bium.place.dto.response;
 
 import java.util.List;
 
