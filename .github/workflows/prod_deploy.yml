@@ -31,13 +31,7 @@ jobs:
       - name: application-prod.yml 생성
         run: |
           mkdir -p src/main/resources
-          echo "${{ secrets.APPLICATION_PROD_YML }}" > src/main/resources/application-prod.yml
-
-      - name: Gradle 권한 부여
-        run: chmod +x gradlew
-
-      - name: Gradle 빌드 (테스트 제외)
-        run: ./gradlew clean build -x test
+          echo " ${{ secrets.APPLICATION_PROD_YML }}" > src/main/resources/application-prod.yml
 
       - name: Docker Hub 로그인
         uses: docker/login-action@v3
