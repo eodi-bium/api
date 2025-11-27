@@ -4,7 +4,8 @@ public record DrawPointRequest(
     Long recordId,
     Long eventId,
     String memberId,
-    Integer point
+    Long point
 ) {
+
 }
 

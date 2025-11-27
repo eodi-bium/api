@@ -5,7 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.eodi.bium.review.error.CustomException;
 import com.eodi.bium.review.error.ExceptionMessage;
 import com.eodi.bium.review.member.properties.JwtProperties;
-import com.eodi.bium.review.member.repository.MemberRepository;
+import com.eodi.bium.review.repository.MemberRepository;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
