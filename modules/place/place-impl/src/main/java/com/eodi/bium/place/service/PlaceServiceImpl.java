@@ -19,8 +19,9 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public PlaceResponse getPlaces(PlaceRequest placeRequest) {
-        List<Place> places = placeRepository.findPlaceWithRadius(placeRequest.latitude(),
-            placeRequest.longitude(), placeRequest.km() * 1000);
+        List<Place> places = placeRepository.findPlace(placeRequest.latitude(),
+            placeRequest.longitude(), placeRequest.km() * 1000,
+            placeRequest.recyclingType().name());
         return toPlaceResponse(places);
     }
 
