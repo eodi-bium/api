@@ -11,8 +11,8 @@ public class PlaceResponseMapper {
         List<SinglePlaceResponse> placeResponses = places.stream()
             .map(place -> new SinglePlaceResponse(
                 place.getName(),
-                place.getLongitude(),
                 place.getLatitude(),
+                place.getLongitude(),
                 place.getPhoneNumber()
             )).toList();
         return new PlaceResponse(placeResponses);
