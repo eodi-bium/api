@@ -30,8 +30,8 @@ jobs:
 
       - name: application-prod.yml 생성
         run: |
-          mkdir -p src/main/resources
-          echo " ${{ secrets.APPLICATION_PROD_YML }}" > src/main/resources/application-prod.yml
+          mkdir -p modules/app/src/main/resources
+          echo "${{ secrets.APPLICATION_PROD_YML }}" > modules/app/src/main/resources/application-prod.yml
 
       - name: Docker Hub 로그인
         uses: docker/login-action@v3
