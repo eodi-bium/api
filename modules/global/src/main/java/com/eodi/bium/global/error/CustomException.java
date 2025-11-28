@@ -1,4 +1,4 @@
-package com.eodi.bium.review.error;
+package com.eodi.bium.global.error;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

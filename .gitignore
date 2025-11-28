@@ -40,3 +40,4 @@ out/
 **/src/main/resources/application-**
 .env
 gradle.properties
+init.sql

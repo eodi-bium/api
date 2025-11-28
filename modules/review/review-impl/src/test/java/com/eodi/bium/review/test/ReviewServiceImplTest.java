@@ -71,7 +71,8 @@ class ReviewServiceImplTest {
     void 특정장소_리뷰_조회() {
         // given
         Long placeId = 100L;
-        ReviewResponse response = new ReviewResponse("nickname", "굿", (short) 5, "https://x.y/z.jpg");
+        ReviewResponse response = new ReviewResponse("nickname", "굿", (short) 5,
+            "https://x.y/z.jpg");
 
         when(reviewRepository.findAllByPlaceId(placeId)).thenReturn(List.of(response));
 

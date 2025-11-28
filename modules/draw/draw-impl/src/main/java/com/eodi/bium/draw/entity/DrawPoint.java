@@ -1,6 +1,6 @@
 package com.eodi.bium.draw.entity;
 
-import com.eodi.bium.review.entity.CreatedAt;
+import com.eodi.bium.global.entity.CreatedAt;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -12,8 +12,8 @@ import com.eodi.bium.draw.repsoitory.DrawPointRepository;
 import com.eodi.bium.draw.service.DrawServiceImpl;
 import com.eodi.bium.draw.service.EventServiceImpl;
 import com.eodi.bium.draw.view.DrawPointView;
-import com.eodi.bium.review.error.CustomException;
-import com.eodi.bium.review.error.ExceptionMessage;
+import com.eodi.bium.global.error.CustomException;
+import com.eodi.bium.global.error.ExceptionMessage;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -93,8 +93,8 @@ class DrawTest {
         //when & then
         // 이미 추첨된 이벤트에 대해 다시 startDraw 호출 시 예외 발생 검증
         assertThatThrownBy(() ->
-                drawService.startDraw(new DrawStartRequest(eventId))
-            )
+            drawService.startDraw(new DrawStartRequest(eventId))
+        )
             .isInstanceOf(CustomException.class)
             .hasMessage(ExceptionMessage.DRAW_ALREADY_COMPLETED.getMessage());
     }

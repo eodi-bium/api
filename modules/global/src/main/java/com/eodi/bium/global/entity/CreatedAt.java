@@ -1,4 +1,4 @@
-package com.eodi.bium.review.entity;
+package com.eodi.bium.global.entity;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

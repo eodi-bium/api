@@ -1,7 +1,7 @@
 package com.eodi.bium.review.service;
 
-import com.eodi.bium.review.error.CustomException;
-import com.eodi.bium.review.error.ExceptionMessage;
+import com.eodi.bium.global.error.CustomException;
+import com.eodi.bium.global.error.ExceptionMessage;
 import com.eodi.bium.review.member.api.MemberService;
 import com.eodi.bium.review.member.dto.request.LoginRequest;
 import com.eodi.bium.review.member.dto.response.LoginResponse;

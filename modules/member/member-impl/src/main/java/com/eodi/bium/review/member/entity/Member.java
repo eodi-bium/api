@@ -1,6 +1,6 @@
 package com.eodi.bium.review.member.entity;
 
-import com.eodi.bium.review.entity.CreatedAt;
+import com.eodi.bium.global.entity.CreatedAt;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Builder;

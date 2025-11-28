@@ -2,8 +2,8 @@ package com.eodi.bium.review.member.component;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.eodi.bium.review.error.CustomException;
-import com.eodi.bium.review.error.ExceptionMessage;
+import com.eodi.bium.global.error.CustomException;
+import com.eodi.bium.global.error.ExceptionMessage;
 import com.eodi.bium.review.member.properties.JwtProperties;
 import com.eodi.bium.review.repository.MemberRepository;
 import java.util.Date;
