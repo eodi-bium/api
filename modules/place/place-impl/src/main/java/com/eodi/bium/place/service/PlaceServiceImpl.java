@@ -1,5 +1,6 @@
 package com.eodi.bium.place.service;
 
+import com.eodi.bium.place.api.PlaceService;
 import com.eodi.bium.place.dto.request.PlaceRequest;
 import com.eodi.bium.place.dto.response.PlaceResponse;
 import com.eodi.bium.place.entity.Place;

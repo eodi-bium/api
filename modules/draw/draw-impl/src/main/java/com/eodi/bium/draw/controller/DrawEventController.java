@@ -1,6 +1,6 @@
 package com.eodi.bium.draw.controller;
 
-import com.eodi.bium.draw.EventService;
+import com.eodi.bium.draw.api.EventService;
 import com.eodi.bium.draw.dto.request.DrawEventAddRequest;
 import java.util.List;
 import lombok.AllArgsConstructor;

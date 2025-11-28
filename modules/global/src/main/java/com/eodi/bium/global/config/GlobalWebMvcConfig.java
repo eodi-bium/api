@@ -18,6 +18,7 @@ public class GlobalWebMvcConfig implements WebMvcConfigurer {
             .allowedOrigins(biumProperties.getFrontendDevUrl(),
                 biumProperties.getFrontendDeployUrl())
             .allowedMethods("GET", "POST", "PUT", "DELETE")
+            .allowCredentials(true)
             .maxAge(3600);
     }
 }

@@ -1,6 +1,6 @@
 package com.eodi.bium.draw.service;
 
-import com.eodi.bium.draw.EventService;
+import com.eodi.bium.draw.api.EventService;
 import com.eodi.bium.draw.dto.request.DrawEventAddRequest;
 import com.eodi.bium.draw.entity.DrawEvent;
 import com.eodi.bium.draw.repsoitory.DrawEventRepository;
