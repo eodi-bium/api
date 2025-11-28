@@ -1,7 +1,7 @@
 package com.eodi.bium.review.controller;
 
-import com.eodi.bium.review.ReviewService;
 import com.eodi.bium.global.annotation.AuthUserId;
+import com.eodi.bium.review.api.ReviewService;
 import com.eodi.bium.review.dto.ReviewResponse;
 import com.eodi.bium.review.dto.request.SubmitReviewRequest;
 import java.util.List;

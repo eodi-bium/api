@@ -1,10 +1,10 @@
 package com.eodi.bium.review.service;
 
-import com.eodi.bium.review.ReviewService;
+import com.eodi.bium.member.api.MemberService;
+import com.eodi.bium.review.api.ReviewService;
 import com.eodi.bium.review.dto.ReviewResponse;
 import com.eodi.bium.review.dto.request.SubmitReviewRequest;
 import com.eodi.bium.review.entity.Review;
-import com.eodi.bium.review.member.api.MemberService;
 import com.eodi.bium.review.repository.ReviewRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
