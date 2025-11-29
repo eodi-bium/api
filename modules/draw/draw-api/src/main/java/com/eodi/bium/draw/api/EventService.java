@@ -1,11 +1,11 @@
 package com.eodi.bium.draw.api;
 
 import com.eodi.bium.draw.dto.request.DrawEventAddRequest;
-import java.util.List;
+import com.eodi.bium.draw.dto.response.EventResponse;
 
 public interface EventService {
 
-    List<Long> listAvailableEvents();
+    EventResponse getEvent(String userId);
 
     void addEvent(DrawEventAddRequest request);
 }
