@@ -15,8 +15,15 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
+
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Override
+    public void findMember(String memberId) {
+        memberRepository.findById(memberId)
+            .orElseThrow(() -> new CustomException(ExceptionMessage.USER_NOT_FOUND));
+    }
 
     public LoginResponse login(LoginRequest loginRequest) {
         String memberId = loginRequest.getId();

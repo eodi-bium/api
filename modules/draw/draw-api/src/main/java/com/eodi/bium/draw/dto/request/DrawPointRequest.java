@@ -1,11 +1,18 @@
 package com.eodi.bium.draw.dto.request;
 
+import com.eodi.bium.global.enums.RecyclingType;
+import java.util.List;
+
 public record DrawPointRequest(
-    Long recordId,
+    List<TypeAndCount> typeAndCounts,
     Long eventId,
-    String memberId,
-    Long point
+    String memberId
 ) {
 
-}
+    public record TypeAndCount(
+        RecyclingType recyclingType,
+        Long count
+    ) {
 
+    }
+}
