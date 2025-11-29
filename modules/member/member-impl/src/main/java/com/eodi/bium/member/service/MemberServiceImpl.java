@@ -5,7 +5,7 @@ import com.eodi.bium.global.error.ExceptionMessage;
 import com.eodi.bium.member.api.MemberService;
 import com.eodi.bium.member.dto.request.LoginRequest;
 import com.eodi.bium.member.dto.response.LoginResponse;
-import com.eodi.bium.member.member.entity.Member;
+import com.eodi.bium.member.entity.Member;
 import com.eodi.bium.member.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
