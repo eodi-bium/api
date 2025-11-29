@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/draw-point")
+@RequestMapping("/admin/draw")
 public class DrawPointController {
 
     DrawService drawService;
