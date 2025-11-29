@@ -2,35 +2,58 @@ package com.eodi.bium.draw.service;
 
 import com.eodi.bium.draw.api.DrawService;
 import com.eodi.bium.draw.dto.request.DrawPointRequest;
+import com.eodi.bium.draw.dto.request.DrawPointRequest.TypeAndCount;
 import com.eodi.bium.draw.dto.request.DrawStartRequest;
 import com.eodi.bium.draw.dto.response.DrawResultResponse;
 import com.eodi.bium.draw.entity.DrawEvent;
 import com.eodi.bium.draw.entity.DrawPoint;
+import com.eodi.bium.draw.entity.TrashRecord;
 import com.eodi.bium.draw.repsoitory.DrawEventRepository;
 import com.eodi.bium.draw.repsoitory.DrawPointRepository;
+import com.eodi.bium.draw.repsoitory.TrashRecordRepository;
 import com.eodi.bium.draw.view.DrawPointView;
 import com.eodi.bium.global.error.CustomException;
 import com.eodi.bium.global.error.ExceptionMessage;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class DrawServiceImpl implements DrawService {
 
+    private final TrashRecordRepository trashRecordRepository;
     private final DrawEventRepository drawEventRepository;
     private final DrawPointRepository drawPointRepository;
 
     @Override
+    @Transactional
     public void joinDraw(DrawPointRequest request) {
+        List<TrashRecord> trashRecords = new ArrayList<>();
+        for (TypeAndCount item : request.typeAndCounts()) {
+            TrashRecord trashRecord = TrashRecord.builder()
+                .memberId(request.memberId())
+                .recyclingType(item.recyclingType())
+                .count(item.count())
+                .build();
+
+            trashRecords.add(trashRecord);
+        }
+        trashRecordRepository.saveAll(trashRecords);
+
+        int pont = 0;
+        for (TypeAndCount item : request.typeAndCounts()) {
+            pont += item.recyclingType().getPoint() * item.count();
+        }
+
         DrawPoint drawPoint = DrawPoint.builder()
-            .recordId(request.recordId())
             .eventId(request.eventId())
             .memberId(request.memberId())
-            .point(request.point())
+            .point((long) pont)
+            .trashRecords(trashRecords)
             .build();
-
         drawPointRepository.save(drawPoint);
     }
 
