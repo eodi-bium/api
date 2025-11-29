@@ -14,6 +14,7 @@ import com.eodi.bium.draw.repsoitory.TrashRecordRepository;
 import com.eodi.bium.draw.view.DrawPointView;
 import com.eodi.bium.global.error.CustomException;
 import com.eodi.bium.global.error.ExceptionMessage;
+import com.eodi.bium.member.api.MemberService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +28,12 @@ public class DrawServiceImpl implements DrawService {
     private final TrashRecordRepository trashRecordRepository;
     private final DrawEventRepository drawEventRepository;
     private final DrawPointRepository drawPointRepository;
+    private final MemberService memberService;
 
     @Override
     @Transactional
     public void joinDraw(DrawPointRequest request) {
+        memberService.findMember(request.memberId());
         List<TrashRecord> trashRecords = new ArrayList<>();
         for (TypeAndCount item : request.typeAndCounts()) {
             TrashRecord trashRecord = TrashRecord.builder()

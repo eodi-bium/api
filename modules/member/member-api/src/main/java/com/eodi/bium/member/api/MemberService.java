@@ -8,4 +8,6 @@ public interface MemberService {
     LoginResponse login(LoginRequest loginRequest);
 
     LoginResponse getNickname(String memberId);
+
+    void findMember(String memberId);
 }
