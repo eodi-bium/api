@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -20,17 +19,13 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "draw_point") // 테이블 이름 예시
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DrawPoint extends CreatedAt {
+public class PointAccumLog extends CreatedAt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "draw_point_id")
+    @Column(name = "point_accum_log_id")
     private Long id;
-
-    @Column(name = "event_id", nullable = false)
-    private Long eventId;
 
     @Column(name = "member_id", nullable = false)
     private String memberId;
@@ -41,8 +36,8 @@ public class DrawPoint extends CreatedAt {
     // 단방향 OneToMany 설정
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
-        name = "draw_point_trash_record_link", // 매핑 테이블 이름
-        joinColumns = @JoinColumn(name = "draw_point_id"), // 현재 엔티티(Point)의 FK
+        name = "point_accum_log_trash_record_link", // 매핑 테이블 이름
+        joinColumns = @JoinColumn(name = "point_acuum_id"), // 현재 엔티티(Point)의 FK
         inverseJoinColumns = @JoinColumn(
             name = "trash_record_id",
             unique = true // ★ 중요: 하나의 Disposal은 하나의 Point에만 속하게 강제 (1:N 관계 보장)
@@ -51,9 +46,9 @@ public class DrawPoint extends CreatedAt {
     private List<TrashRecord> trashRecords = new ArrayList<>();
 
     @Builder
-    public DrawPoint(Long eventId, String memberId, Long point, List<TrashRecord> trashRecords) {
+    public PointAccumLog(Long eventId, String memberId, Long point,
+        List<TrashRecord> trashRecords) {
         this.trashRecords = trashRecords;
-        this.eventId = eventId;
         this.memberId = memberId;
         this.point = point;
     }
