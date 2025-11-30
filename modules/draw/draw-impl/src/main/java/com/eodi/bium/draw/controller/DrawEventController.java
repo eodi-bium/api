@@ -23,6 +23,6 @@ public class DrawEventController {
 
     @GetMapping("/latest")
     public List<Long> listDrawEvents() {
-        return eventService.listAvailableEvents();
+        return eventService.getLastestEvent();
     }
 }

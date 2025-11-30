@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface EventService {
 
-    List<Long> listAvailableEvents();
+    List<Long> getLastestEvent();
 
     void addEvent(DrawEventAddRequest request);
 }

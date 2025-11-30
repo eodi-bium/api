@@ -24,7 +24,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Long> listAvailableEvents() {
+    public List<Long> getLastestEvent() {
         return drawEventRepository.findAllAvailableEventIds();
     }
 }
