@@ -25,7 +25,7 @@ public class AdminController {
         eventService.addEvent(request);
     }
 
-    @PostMapping("/draw/add")
+    @PostMapping("/point/add")
     public void joinDraw(
         @RequestBody DrawPointRequest drawPointRequest) {
         drawService.joinDraw(drawPointRequest);
