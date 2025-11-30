@@ -23,7 +23,7 @@ public class DrawEventController {
         eventService.addEvent(request);
     }
 
-    @GetMapping("/latest")
+    @GetMapping("/lastest")
     public EventResponse getEvent(
         @AuthUserId
         String userId
