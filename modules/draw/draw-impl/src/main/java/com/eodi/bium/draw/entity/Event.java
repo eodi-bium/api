@@ -27,7 +27,7 @@ public class Event extends CreatedAt {
     private Long count;
 
     @Column(columnDefinition = "TEXT")
-    private String giftPicture;
+    private String giftImageUrl;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private LocalDateTime announcementDate;
@@ -35,13 +35,13 @@ public class Event extends CreatedAt {
     private String winnerId;
 
     @Builder
-    private Event(String giftName, String giftPicture,
+    private Event(String giftName, String giftImageUrl,
         LocalDateTime startDate, LocalDateTime endDate,
         LocalDateTime announcementDate,
         Long count) {
         this.count = count;
         this.giftName = giftName;
-        this.giftPicture = giftPicture;
+        this.giftImageUrl = giftImageUrl;
         this.startDate = startDate;
         this.endDate = endDate;
         this.announcementDate = announcementDate;

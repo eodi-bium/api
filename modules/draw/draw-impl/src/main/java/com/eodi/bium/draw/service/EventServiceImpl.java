@@ -26,7 +26,7 @@ public class EventServiceImpl implements EventService {
         return new EventResponse(
             availableEvent.getGiftName(),
             availableEvent.getCount(),
-            availableEvent.getGiftPicture(),
+            availableEvent.getGiftImageUrl(),
             new EventResponse.EventPeriod(
                 availableEvent.getStartDate(),
                 availableEvent.getEndDate(),
@@ -52,7 +52,7 @@ public class EventServiceImpl implements EventService {
 
         Event event = Event.builder()
             .giftName(request.giftName())
-            .giftPicture(request.giftPictureUrl())
+            .giftImageUrl(request.giftImageUrl())
             .startDate(request.startDate())
             .endDate(request.endDate())
             .announcementDate(request.announcementDate())

@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public record EventResponse(
     String giftName,
     Long count,
-    String gifPictureUrl,
+    String giftImageUrl,
     EventPeriod period,
     EventStats stats,
     UserEventStatus userStatus
