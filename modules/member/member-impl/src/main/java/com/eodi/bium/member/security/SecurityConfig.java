@@ -59,7 +59,7 @@ public class SecurityConfig {
     public SecurityFilterChain apiFilterChain(HttpSecurity http,
         AuthenticationManager authenticationManager) throws Exception {
         http
-            .securityMatcher("/admin/**", "/test")
+            .securityMatcher("/admin/**", "/test", "/event/**")
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -81,7 +81,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/test").authenticated()
-                .anyRequest().denyAll() // 이 필터 체인에 해당하지만 위에서 명시되지 않은 다른 모든 요청은 거부
+                .requestMatchers("/event/lastest").permitAll()
+                .requestMatchers("/event/**").authenticated()
+                .anyRequest().denyAll()
             );
         return http.build();
     }

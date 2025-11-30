@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Builder;
 
 @Entity
 public class EventJoin {
@@ -15,6 +16,17 @@ public class EventJoin {
     private Long id;
 
     private String memberId;
-    private String point;
+    private Long point;
     private Long eventId;
+
+    @Builder
+    private EventJoin(
+        String memberId,
+        Long point,
+        Long eventId
+    ) {
+        this.memberId = memberId;
+        this.point = point;
+        this.eventId = eventId;
+    }
 }

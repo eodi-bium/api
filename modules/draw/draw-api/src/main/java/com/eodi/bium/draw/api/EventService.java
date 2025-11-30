@@ -9,7 +9,7 @@ public interface EventService {
 
     MyPointResponse getMyPoint(String userId);
 
-    void joinEvent(String userId, EventJoinRequest request);
+    void joinEvent(String memberId, EventJoinRequest request);
 
     EventResponse getEvent(String userId);
 

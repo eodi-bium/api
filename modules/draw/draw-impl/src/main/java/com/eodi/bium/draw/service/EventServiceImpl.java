@@ -6,25 +6,39 @@ import com.eodi.bium.draw.dto.request.EventJoinRequest;
 import com.eodi.bium.draw.dto.response.EventResponse;
 import com.eodi.bium.draw.dto.response.MyPointResponse;
 import com.eodi.bium.draw.entity.Event;
+import com.eodi.bium.draw.entity.EventJoin;
 import com.eodi.bium.draw.entity.MemberPoint;
+import com.eodi.bium.draw.repsoitory.EventJoinRepository;
 import com.eodi.bium.draw.repsoitory.EventRepository;
 import com.eodi.bium.draw.repsoitory.MemberPointRepository;
 import com.eodi.bium.global.error.CustomException;
 import com.eodi.bium.global.error.ExceptionMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 
-
+    private final EventJoinRepository eventJoinRepository;
     private final MemberPointRepository memberPointRepository;
     private final EventRepository eventRepository;
 
     @Override
-    public void joinEvent(String userId, EventJoinRequest request) {
-        System.out.println("userId = " + userId);
+    @Transactional
+    public void joinEvent(String memberId, EventJoinRequest request) {
+        MemberPoint memberPoint = memberPointRepository.findByMemberId(memberId).orElseThrow(
+            () -> new CustomException(ExceptionMessage.USER_NOT_FOUND)
+        );
+        if (memberPoint.getPoint() < request.point()) {
+            throw new CustomException(ExceptionMessage.INSUFFICIENT_POINTS);
+        }
+        memberPoint.setPoint(memberPoint.getPoint() - request.point());
+        memberPointRepository.save(memberPoint);
+        eventJoinRepository.save(EventJoin.builder().eventId(
+            request.eventId()).memberId(memberId).point(request.point()).build(
+        ));
     }
 
     @Override
@@ -41,7 +55,9 @@ public class EventServiceImpl implements EventService {
         if (availableEvent == null) {
             throw new CustomException(ExceptionMessage.EVENT_NOT_FOUND);
         }
+        boolean isNotLogin = userId == null;
         return new EventResponse(
+            isNotLogin,
             availableEvent.getGiftName(),
             availableEvent.getCount(),
             availableEvent.getGiftImageUrl(),
