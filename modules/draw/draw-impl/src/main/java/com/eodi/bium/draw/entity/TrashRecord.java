@@ -33,7 +33,6 @@ public class TrashRecord {
     @Enumerated(EnumType.STRING)
     private RecyclingType recyclingType;
 
-    // 객체 생성을 위한 빌더 패턴 적용
     @Builder
     public TrashRecord(Long count, String memberId, RecyclingType recyclingType) {
         this.count = count;

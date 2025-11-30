@@ -103,8 +103,8 @@ public class DrawServiceImpl implements DrawService {
         throw new CustomException(ExceptionMessage.INTERNAL_SERVER_ERROR);
     }
 
-    @Override
-    public List<String> getDrawJoinedMembers(Long eventId) {
-        return drawPointRepository.getMembersWithEventId(eventId);
-    }
+//    @Override
+//    public List<String> getDrawJoinedMembers(Long eventId) {
+//        return drawPointRepository.getMembersWithEventId(eventId);
+//    }
 }

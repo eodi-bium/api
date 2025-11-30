@@ -29,9 +29,6 @@ public class DrawPoint extends CreatedAt {
     @Column(name = "draw_point_id")
     private Long id;
 
-    @Column(name = "event_id", nullable = false)
-    private Long eventId;
-
     @Column(name = "member_id", nullable = false)
     private String memberId;
 
@@ -53,7 +50,6 @@ public class DrawPoint extends CreatedAt {
     @Builder
     public DrawPoint(Long eventId, String memberId, Long point, List<TrashRecord> trashRecords) {
         this.trashRecords = trashRecords;
-        this.eventId = eventId;
         this.memberId = memberId;
         this.point = point;
     }

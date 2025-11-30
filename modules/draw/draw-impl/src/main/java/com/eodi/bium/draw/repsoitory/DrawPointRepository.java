@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DrawPointRepository extends JpaRepository<DrawPoint, Long> {
 
-    @Query("SELECT dp.memberId FROM DrawPoint dp WHERE dp.eventId = :eventId")
-    List<String> getMembersWithEventId(Long eventId);
+//    @Query("SELECT dp.memberId FROM DrawPoint dp WHERE dp.eventId = :eventId")
+//    List<String> getMembersWithEventId(Long eventId);
 
     @Query("""
             SELECT new com.eodi.bium.draw.view.DrawPointView(dp.memberId, SUM(dp.point))
