@@ -3,8 +3,8 @@ package com.eodi.bium.draw.service;
 import com.eodi.bium.draw.api.EventService;
 import com.eodi.bium.draw.dto.request.DrawEventAddRequest;
 import com.eodi.bium.draw.dto.response.EventResponse;
-import com.eodi.bium.draw.entity.DrawEvent;
-import com.eodi.bium.draw.repsoitory.DrawEventRepository;
+import com.eodi.bium.draw.entity.Event;
+import com.eodi.bium.draw.repsoitory.EventRepository;
 import com.eodi.bium.global.error.CustomException;
 import com.eodi.bium.global.error.ExceptionMessage;
 import lombok.RequiredArgsConstructor;
@@ -15,16 +15,17 @@ import org.springframework.stereotype.Service;
 public class EventServiceImpl implements EventService {
 
 
-    private final DrawEventRepository drawEventRepository;
+    private final EventRepository eventRepository;
 
     @Override
     public EventResponse getEvent(String userId) {
-        DrawEvent availableEvent = drawEventRepository.findAvailableEvent();
+        Event availableEvent = eventRepository.findAvailableEvent();
         if (availableEvent == null) {
             throw new CustomException(ExceptionMessage.EVENT_NOT_FOUND);
         }
         return new EventResponse(
             availableEvent.getGiftName(),
+            availableEvent.getCount(),
             availableEvent.getGiftPicture(),
             new EventResponse.EventPeriod(
                 availableEvent.getStartDate(),
@@ -45,18 +46,19 @@ public class EventServiceImpl implements EventService {
     @Override
     public void addEvent(DrawEventAddRequest request) {
 
-        if (drawEventRepository.findAvailableEvent() != null) {
+        if (eventRepository.findAvailableEvent() != null) {
             throw new CustomException(ExceptionMessage.EVENT_ALREADY_ONGOING);
         }
 
-        DrawEvent drawEvent = DrawEvent.builder()
+        Event event = Event.builder()
             .giftName(request.giftName())
             .giftPicture(request.giftPictureUrl())
             .startDate(request.startDate())
             .endDate(request.endDate())
             .announcementDate(request.announcementDate())
+            .count(request.count())
             .build();
-        drawEventRepository.save(drawEvent);
+        eventRepository.save(event);
     }
 }
 

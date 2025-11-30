@@ -1,17 +1,17 @@
 package com.eodi.bium.draw.repsoitory;
 
-import com.eodi.bium.draw.entity.DrawEvent;
+import com.eodi.bium.draw.entity.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DrawEventRepository extends JpaRepository<DrawEvent, Long> {
+public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("""
           SELECT d
-            FROM DrawEvent d
+            FROM Event d
           WHERE d.winnerId IS NULL
         """)
-    DrawEvent findAvailableEvent();
+    Event findAvailableEvent();
 }

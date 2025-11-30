@@ -4,7 +4,7 @@ import com.eodi.bium.draw.dto.request.DrawPointRequest;
 import com.eodi.bium.draw.dto.request.DrawStartRequest;
 import com.eodi.bium.draw.dto.response.DrawResultResponse;
 
-public interface DrawService {
+public interface PointService {
 
     void addPoint(DrawPointRequest request);
 

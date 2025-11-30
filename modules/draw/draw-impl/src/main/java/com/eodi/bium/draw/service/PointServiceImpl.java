@@ -1,15 +1,17 @@
 package com.eodi.bium.draw.service;
 
-import com.eodi.bium.draw.api.DrawService;
+import com.eodi.bium.draw.api.PointService;
 import com.eodi.bium.draw.dto.request.DrawPointRequest;
 import com.eodi.bium.draw.dto.request.DrawPointRequest.TypeAndCount;
 import com.eodi.bium.draw.dto.request.DrawStartRequest;
 import com.eodi.bium.draw.dto.response.DrawResultResponse;
-import com.eodi.bium.draw.entity.DrawEvent;
-import com.eodi.bium.draw.entity.DrawPoint;
+import com.eodi.bium.draw.entity.Event;
+import com.eodi.bium.draw.entity.MemberPoint;
+import com.eodi.bium.draw.entity.PointAccumLog;
 import com.eodi.bium.draw.entity.TrashRecord;
-import com.eodi.bium.draw.repsoitory.DrawEventRepository;
-import com.eodi.bium.draw.repsoitory.DrawPointRepository;
+import com.eodi.bium.draw.repsoitory.EventRepository;
+import com.eodi.bium.draw.repsoitory.MemberPointRepository;
+import com.eodi.bium.draw.repsoitory.PointAccumLogRepository;
 import com.eodi.bium.draw.repsoitory.TrashRecordRepository;
 import com.eodi.bium.draw.view.DrawPointView;
 import com.eodi.bium.global.error.CustomException;
@@ -17,17 +19,19 @@ import com.eodi.bium.global.error.ExceptionMessage;
 import com.eodi.bium.member.api.MemberService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class DrawServiceImpl implements DrawService {
+public class PointServiceImpl implements PointService {
 
     private final TrashRecordRepository trashRecordRepository;
-    private final DrawEventRepository drawEventRepository;
-    private final DrawPointRepository drawPointRepository;
+    private final EventRepository eventRepository;
+    private final MemberPointRepository memberPointRepository;
+    private final PointAccumLogRepository pointAccumLogRepository;
     private final MemberService memberService;
 
     @Override
@@ -51,24 +55,37 @@ public class DrawServiceImpl implements DrawService {
             pont += item.recyclingType().getPoint() * item.count();
         }
 
-        DrawPoint drawPoint = DrawPoint.builder()
+        PointAccumLog pointAccumLog = PointAccumLog.builder()
             .eventId(request.eventId())
             .memberId(request.memberId())
             .point((long) pont)
             .trashRecords(trashRecords)
             .build();
-        drawPointRepository.save(drawPoint);
+        pointAccumLogRepository.save(pointAccumLog);
+
+        Optional<MemberPoint> byMemberId = memberPointRepository.findByMemberId(request.memberId());
+        if (byMemberId.isPresent()) {
+            MemberPoint memberPoint = byMemberId.get();
+            memberPoint.setPoint(memberPoint.getPoint() + pont);
+            memberPointRepository.save(memberPoint);
+        } else {
+            MemberPoint memberPoint = MemberPoint.builder()
+                .memberId(request.memberId())
+                .point((long) pont)
+                .build();
+            memberPointRepository.save(memberPoint);
+        }
     }
 
     @Override
     public DrawResultResponse startDraw(DrawStartRequest request) {
-        DrawEvent drawEvent = drawEventRepository.findById(request.eventId()).orElseThrow(
+        Event event = eventRepository.findById(request.eventId()).orElseThrow(
             () -> new CustomException(ExceptionMessage.INTERNAL_SERVER_ERROR)
         );
-        if (drawEvent.getWinnerId() != null) {
+        if (event.getWinnerId() != null) {
             throw new CustomException(ExceptionMessage.DRAW_ALREADY_COMPLETED);
         }
-        List<DrawPointView> candidates = drawPointRepository.findByEventId(request.eventId());
+        List<DrawPointView> candidates = pointAccumLogRepository.findByEventId(request.eventId());
         int totalWeight = 0;
         for (DrawPointView item : candidates) {
             totalWeight += item.point();
@@ -90,12 +107,12 @@ public class DrawServiceImpl implements DrawService {
 
             // 현재 아이템의 구간에 랜덤값이 포함되는지 확인
             if (randomValue < currentWeight) {
-                drawEvent = drawEventRepository.findById(request.eventId()).orElseThrow(
+                event = eventRepository.findById(request.eventId()).orElseThrow(
                     () -> new CustomException(ExceptionMessage.INTERNAL_SERVER_ERROR)
                 );
                 System.out.println("당첨자 발생!!: " + item.memberId());
-                drawEvent.setWinnerId(item.memberId());
-                drawEventRepository.save(drawEvent);
+                event.setWinnerId(item.memberId());
+                eventRepository.save(event);
                 return new DrawResultResponse(item.memberId());
             }
         }

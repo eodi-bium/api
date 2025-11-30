@@ -16,14 +16,15 @@ import lombok.Setter;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DrawEvent extends CreatedAt {
-
+public class Event extends CreatedAt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id")
     private Long id;
     private String giftName;
+
+    private Long count;
 
     @Column(columnDefinition = "TEXT")
     private String giftPicture;
@@ -34,9 +35,11 @@ public class DrawEvent extends CreatedAt {
     private String winnerId;
 
     @Builder
-    private DrawEvent(String giftName, String giftPicture,
+    private Event(String giftName, String giftPicture,
         LocalDateTime startDate, LocalDateTime endDate,
-        LocalDateTime announcementDate) {
+        LocalDateTime announcementDate,
+        Long count) {
+        this.count = count;
         this.giftName = giftName;
         this.giftPicture = giftPicture;
         this.startDate = startDate;

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 // 1. 전체 응답을 감싸는 Root Wrapper (JSON의 최상위 "data" 키 대응)
 public record EventResponse(
     String giftName,
+    Long count,
     String gifPictureUrl,
     EventPeriod period,
     EventStats stats,
