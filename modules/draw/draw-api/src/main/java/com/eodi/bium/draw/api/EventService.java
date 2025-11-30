@@ -4,14 +4,17 @@ import com.eodi.bium.draw.dto.request.DrawEventAddRequest;
 import com.eodi.bium.draw.dto.request.EventJoinRequest;
 import com.eodi.bium.draw.dto.response.EventResponse;
 import com.eodi.bium.draw.dto.response.MyPointResponse;
+import com.eodi.bium.draw.dto.response.UserEventStatus;
 
 public interface EventService {
+
+    UserEventStatus getMyStatus(String userId, Long eventId);
 
     MyPointResponse getMyPoint(String userId);
 
     void joinEvent(String memberId, EventJoinRequest request);
 
-    EventResponse getEvent(String userId);
+    EventResponse getEvent();
 
     void addEvent(DrawEventAddRequest request);
 }

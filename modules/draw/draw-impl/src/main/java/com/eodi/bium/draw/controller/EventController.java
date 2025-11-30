@@ -7,6 +7,7 @@ import com.eodi.bium.draw.dto.response.MyPointResponse;
 import com.eodi.bium.global.annotation.AuthUserId;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventController {
 
     private final EventService eventService;
+
+    @GetMapping("/{id}/status")
+    public void getStatus(
+        @AuthUserId
+        String userId,
+        @PathVariable("id")
+        Long eventId
+    ) {
+        eventService.getMyStatus(userId, eventId);
+    }
 
     @PostMapping("/join")
     public void joinEvent(
@@ -39,9 +50,8 @@ public class EventController {
 
     @GetMapping("/lastest")
     public EventResponse getEvent(
-        @AuthUserId
-        String userId
+
     ) {
-        return eventService.getEvent(userId);
+        return eventService.getEvent();
     }
 }

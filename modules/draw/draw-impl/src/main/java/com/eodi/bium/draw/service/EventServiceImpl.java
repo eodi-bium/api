@@ -5,6 +5,7 @@ import com.eodi.bium.draw.dto.request.DrawEventAddRequest;
 import com.eodi.bium.draw.dto.request.EventJoinRequest;
 import com.eodi.bium.draw.dto.response.EventResponse;
 import com.eodi.bium.draw.dto.response.MyPointResponse;
+import com.eodi.bium.draw.dto.response.UserEventStatus;
 import com.eodi.bium.draw.entity.Event;
 import com.eodi.bium.draw.entity.EventJoin;
 import com.eodi.bium.draw.entity.MemberPoint;
@@ -42,6 +43,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public UserEventStatus getMyStatus(String userId, Long eventId) {
+        return null;
+    }
+
+    @Override
     public MyPointResponse getMyPoint(String memberId) {
         MemberPoint memberPoint = memberPointRepository.findByMemberId(memberId).orElseThrow(
             () -> new CustomException(ExceptionMessage.USER_NOT_FOUND)
@@ -50,14 +56,12 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventResponse getEvent(String userId) {
+    public EventResponse getEvent() {
         Event availableEvent = eventRepository.findAvailableEvent();
         if (availableEvent == null) {
             throw new CustomException(ExceptionMessage.EVENT_NOT_FOUND);
         }
-        boolean isNotLogin = userId == null;
         return new EventResponse(
-            isNotLogin,
             availableEvent.getGiftName(),
             availableEvent.getCount(),
             availableEvent.getGiftImageUrl(),
@@ -69,10 +73,6 @@ public class EventServiceImpl implements EventService {
             new EventResponse.EventStats(
                 0L,
                 0L
-            ),
-            new EventResponse.UserEventStatus(
-                0L,
-                0.0
             )
         );
     }

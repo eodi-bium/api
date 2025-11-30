@@ -1,6 +1,8 @@
 package com.eodi.bium.member.security;
 
 import com.eodi.bium.global.error.ExceptionMessage;
+import com.eodi.bium.member.component.AccessTokenHandler;
+import com.eodi.bium.member.dto.response.AtResponse;
 import com.eodi.bium.member.entity.Member;
 import com.eodi.bium.member.repository.MemberRepository;
 import com.eodi.bium.member.security.filter.JwtTokenAuthenticationFilter;
@@ -9,8 +11,9 @@ import com.eodi.bium.member.security.principal.PrincipalDetails;
 import com.eodi.bium.member.security.provider.GoogleUserInfo;
 import com.eodi.bium.member.security.provider.KakaoUserInfo;
 import com.eodi.bium.member.security.provider.OAuth2UserInfo;
-import com.eodi.bium.member.service.TokenRotationService;
+import com.eodi.bium.member.util.CookieUtil;
 import com.eodi.bium.member.util.NicknameGenerateUtil;
+import com.eodi.bium.member.util.RefreshTokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,7 +46,6 @@ import org.springframework.stereotype.Component;
 public class SecurityConfig {
 
     private final PrincipalOAuth2UserService principalOauth2UserService;
-    private final MemberRepository memberRepository;
     private final TokenRotationService tokenRotationService;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
@@ -53,18 +55,17 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    // JWT 필터 통하는 것
     @Bean
-    @Order(1)
-    public SecurityFilterChain apiFilterChain(HttpSecurity http,
+    public SecurityFilterChain filterChain(HttpSecurity http,
         AuthenticationManager authenticationManager) throws Exception {
         http
-            .securityMatcher("/admin/**", "/test", "/event/**")
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .formLogin(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
+
+            // 예외 처리 (공통)
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint((request, response, authException) -> {
                     createUnauthorizedResponse(response);
@@ -73,49 +74,33 @@ public class SecurityConfig {
                     createForbiddenResponse(response);
                 })
             )
+
+            // 필터 등록 (모든 요청에 대해 동작하지만, 헤더/쿠키가 없으면 내부 로직에서 통과됨)
+            // 최적화된 생성자 적용 (Repository 제거됨)
             .addFilterBefore(
-                new JwtTokenAuthenticationFilter(authenticationManager, memberRepository),
+                new JwtTokenAuthenticationFilter(authenticationManager),
                 UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new RefreshRotationFilter(tokenRotationService),
+            .addFilterBefore(
+                new RefreshRotationFilter(tokenRotationService),
                 JwtTokenAuthenticationFilter.class)
+
+            // URL 권한 설정 (순서 중요: 구체적인 것 -> 일반적인 것)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/test").authenticated()
-                .requestMatchers("/event/lastest").permitAll()
-                .requestMatchers("/event/**").authenticated()
-                .anyRequest().denyAll()
-            );
-        return http.build();
-    }
+                .anyRequest().permitAll()
+            )
 
-    // JWT 필터 통하지 않는 것
-    @Bean
-    @Order(2)
-    public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(
-                session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .formLogin(AbstractHttpConfigurer::disable)
-            .httpBasic(AbstractHttpConfigurer::disable)
-            .exceptionHandling(ex -> ex
-                .authenticationEntryPoint((request, response, authException) -> {
-                    createUnauthorizedResponse(response);
-                })
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    createForbiddenResponse(response);
-                })
-            )
-            .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll() // 나머지 모든 요청 허용
-            )
+            // OAuth2 설정
             .oauth2Login(oauth -> oauth
                 .userInfoEndpoint(user -> user.userService(principalOauth2UserService))
                 .successHandler(oAuth2LoginSuccessHandler)
             );
+
         return http.build();
     }
 
+    // --- 이하 기존 유틸 메서드 및 내부 클래스 동일 ---
 
     public void createUnauthorizedResponse(HttpServletResponse response) {
         try {
@@ -173,8 +158,7 @@ public class SecurityConfig {
             OAuth2UserInfo oAuth2UserInfo = null;
             if (userRequest.getClientRegistration().getRegistrationId().equals("google")) {
                 oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
-            } else if (userRequest.getClientRegistration().getRegistrationId()
-                .equals("kakao")) {
+            } else if (userRequest.getClientRegistration().getRegistrationId().equals("kakao")) {
                 oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
             }
             String userId = oAuth2UserInfo.getProvider() + "_" + oAuth2UserInfo.getProviderId();
@@ -194,6 +178,45 @@ public class SecurityConfig {
                 memberRepository.save(member);
             }
             return new PrincipalDetails(member, oAuth2User.getAttributes());
+        }
+    }
+
+    @Component
+    @RequiredArgsConstructor
+    public static class TokenRotationService {
+
+        private final RefreshTokenUtil refreshTokenUtil;
+        private final AccessTokenHandler accessTokenHandler;
+
+        public void issueRefreshToken(String userId, HttpServletResponse response) {
+            String newRtPlain = refreshTokenUtil.issue(userId);
+            setRefreshToken(response, newRtPlain);
+        }
+
+        public void issueTokens(String userId, HttpServletResponse response) {
+            String newRtPlain = refreshTokenUtil.issue(userId);
+            String newAt = accessTokenHandler.validateAndGenerate(userId);
+
+            setAccessToken(response, newAt);
+            setRefreshToken(response, newRtPlain);
+        }
+
+        public AtResponse rotateTokens(String refreshToken, HttpServletResponse response) {
+            var newRtCookie = refreshTokenUtil.validateAndRotate(refreshToken);
+            String newAt = accessTokenHandler.validateAndGenerate(newRtCookie.userId());
+
+            setAccessToken(response, newAt);
+            setRefreshToken(response, newRtCookie.newRtPlain());
+            return new AtResponse(newAt);
+        }
+
+        private void setAccessToken(HttpServletResponse response, String newAt) {
+            response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + newAt);
+        }
+
+        private void setRefreshToken(HttpServletResponse response, String newRtPlain) {
+            response.setHeader(HttpHeaders.SET_COOKIE,
+                CookieUtil.buildCookies(newRtPlain).toString());
         }
     }
 }
