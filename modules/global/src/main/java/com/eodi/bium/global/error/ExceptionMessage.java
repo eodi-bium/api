@@ -16,7 +16,7 @@ public enum ExceptionMessage {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."),
     NOT_ENOUGH_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 부족합니다."),
 
-
+    INSUFFICIENT_POINTS(HttpStatus.BAD_REQUEST, "포인트가 부족합니다."),
     EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "이벤트를 찾을 수 없습니다."),
     EVENT_ALREADY_ONGOING(HttpStatus.BAD_REQUEST, "이미 진행 중인 이벤트가 있습니다."),
     DRAW_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "추첨이 이미 완료되었습니다.");
