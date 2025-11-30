@@ -59,7 +59,7 @@ public class SecurityConfig {
     public SecurityFilterChain apiFilterChain(HttpSecurity http,
         AuthenticationManager authenticationManager) throws Exception {
         http
-            .securityMatcher("/statistics/**", "/admin/**", "/test", "/review/submit")
+            .securityMatcher("/admin/**", "/test")
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -79,10 +79,8 @@ public class SecurityConfig {
             .addFilterBefore(new RefreshRotationFilter(tokenRotationService),
                 JwtTokenAuthenticationFilter.class)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/statistics/**").authenticated()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/test").authenticated()
-                .requestMatchers("/review/submit").authenticated()
                 .anyRequest().denyAll() // 이 필터 체인에 해당하지만 위에서 명시되지 않은 다른 모든 요청은 거부
             );
         return http.build();
