@@ -32,7 +32,7 @@ public class DrawServiceImpl implements DrawService {
 
     @Override
     @Transactional
-    public void joinDraw(DrawPointRequest request) {
+    public void addPoint(DrawPointRequest request) {
         memberService.findMember(request.memberId());
         List<TrashRecord> trashRecords = new ArrayList<>();
         for (TypeAndCount item : request.typeAndCounts()) {

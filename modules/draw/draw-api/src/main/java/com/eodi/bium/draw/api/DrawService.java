@@ -6,7 +6,7 @@ import com.eodi.bium.draw.dto.response.DrawResultResponse;
 
 public interface DrawService {
 
-    void joinDraw(DrawPointRequest request);
+    void addPoint(DrawPointRequest request);
 
     DrawResultResponse startDraw(DrawStartRequest request);
 }
