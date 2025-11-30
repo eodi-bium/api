@@ -5,7 +5,6 @@ import java.util.List;
 
 public record DrawPointRequest(
     List<TypeAndCount> typeAndCounts,
-    Long eventId,
     String memberId
 ) {
 

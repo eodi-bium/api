@@ -52,7 +52,6 @@ public class DrawServiceImpl implements DrawService {
         }
 
         DrawPoint drawPoint = DrawPoint.builder()
-            .eventId(request.eventId())
             .memberId(request.memberId())
             .point((long) pont)
             .trashRecords(trashRecords)

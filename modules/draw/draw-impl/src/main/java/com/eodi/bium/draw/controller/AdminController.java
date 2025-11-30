@@ -1,6 +1,8 @@
 package com.eodi.bium.draw.controller;
 
 import com.eodi.bium.draw.api.DrawService;
+import com.eodi.bium.draw.api.EventService;
+import com.eodi.bium.draw.dto.request.DrawEventAddRequest;
 import com.eodi.bium.draw.dto.request.DrawPointRequest;
 import com.eodi.bium.draw.dto.request.DrawStartRequest;
 import com.eodi.bium.draw.dto.response.DrawResultResponse;
@@ -12,18 +14,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/admin/draw")
-public class DrawPointController {
+@RequestMapping("/admin")
+public class AdminController {
 
-    DrawService drawService;
+    private final EventService eventService;
+    private final DrawService drawService;
 
-    @PostMapping("/join")
+    @PostMapping("/event/add")
+    public void addDrawEvent(DrawEventAddRequest request) {
+        eventService.addEvent(request);
+    }
+
+    @PostMapping("/draw/add")
     public void joinDraw(
         @RequestBody DrawPointRequest drawPointRequest) {
         drawService.joinDraw(drawPointRequest);
     }
 
-    @PostMapping("/start")
+    @PostMapping("/draw/start")
     public DrawResultResponse startDraw(@RequestBody DrawStartRequest drawStartRequest) {
         return drawService.startDraw(drawStartRequest);
     }

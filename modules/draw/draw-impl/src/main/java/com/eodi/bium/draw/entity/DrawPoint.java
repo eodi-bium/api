@@ -51,9 +51,8 @@ public class DrawPoint extends CreatedAt {
     private List<TrashRecord> trashRecords = new ArrayList<>();
 
     @Builder
-    public DrawPoint(Long eventId, String memberId, Long point, List<TrashRecord> trashRecords) {
+    public DrawPoint(String memberId, Long point, List<TrashRecord> trashRecords) {
         this.trashRecords = trashRecords;
-        this.eventId = eventId;
         this.memberId = memberId;
         this.point = point;
     }

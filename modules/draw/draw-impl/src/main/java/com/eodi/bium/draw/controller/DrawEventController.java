@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/draw-event")
+@RequestMapping("/event")
 public class DrawEventController {
 
     private final EventService eventService;
@@ -21,7 +21,7 @@ public class DrawEventController {
         eventService.addEvent(request);
     }
 
-    @GetMapping("/list")
+    @GetMapping("/latest")
     public List<Long> listDrawEvents() {
         return eventService.listAvailableEvents();
     }
