@@ -1,8 +1,9 @@
 package com.eodi.bium.draw.controller;
 
 import com.eodi.bium.draw.api.EventService;
-import com.eodi.bium.draw.dto.request.DrawEventAddRequest;
+import com.eodi.bium.draw.dto.request.EventJoinRequest;
 import com.eodi.bium.draw.dto.response.EventResponse;
+import com.eodi.bium.draw.dto.response.MyPointResponse;
 import com.eodi.bium.global.annotation.AuthUserId;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,13 +15,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/event")
-public class DrawEventController {
+public class EventController {
 
     private final EventService eventService;
 
-    @PostMapping("/add")
-    public void addDrawEvent(@RequestBody DrawEventAddRequest request) {
-        eventService.addEvent(request);
+    @PostMapping("/join")
+    public void joinEvent(
+        @AuthUserId
+        String userId,
+        @RequestBody
+        EventJoinRequest request
+    ) {
+        eventService.joinEvent(userId, request);
+    }
+
+    @GetMapping("/point")
+    public MyPointResponse getMyPoint(
+        @AuthUserId
+        String userId
+    ) {
+        return eventService.getMyPoint(userId);
     }
 
     @GetMapping("/lastest")
