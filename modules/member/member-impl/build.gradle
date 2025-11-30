@@ -6,6 +6,7 @@ dependencies {
     implementation project(':global')
     implementation project(':member:member-api')
     implementation project(':review:review-api')
+    implementation project(':draw:draw-api')
 
 
     // ────────────────────────────────
