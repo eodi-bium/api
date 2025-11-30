@@ -5,7 +5,7 @@ import com.eodi.bium.global.error.ExceptionMessage;
 import com.eodi.bium.member.api.MemberService;
 import com.eodi.bium.member.dto.request.LoginRequest;
 import com.eodi.bium.member.dto.response.LoginResponse;
-import com.eodi.bium.member.member.entity.Member;
+import com.eodi.bium.member.entity.Member;
 import com.eodi.bium.member.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,8 +15,15 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
+
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Override
+    public void findMember(String memberId) {
+        memberRepository.findById(memberId)
+            .orElseThrow(() -> new CustomException(ExceptionMessage.USER_NOT_FOUND));
+    }
 
     public LoginResponse login(LoginRequest loginRequest) {
         String memberId = loginRequest.getId();

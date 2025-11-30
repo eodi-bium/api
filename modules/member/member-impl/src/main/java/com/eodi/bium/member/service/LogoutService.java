@@ -1,7 +1,7 @@
 package com.eodi.bium.member.service;
 
-import com.eodi.bium.member.member.util.CookieUtil;
-import com.eodi.bium.member.member.util.RefreshTokenUtil;
+import com.eodi.bium.member.util.CookieUtil;
+import com.eodi.bium.member.util.RefreshTokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

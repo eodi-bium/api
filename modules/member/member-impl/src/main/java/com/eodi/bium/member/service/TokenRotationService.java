@@ -1,9 +1,9 @@
 package com.eodi.bium.member.service;
 
+import com.eodi.bium.member.component.AccessTokenHandler;
 import com.eodi.bium.member.dto.response.AtResponse;
-import com.eodi.bium.member.member.component.AccessTokenHandler;
-import com.eodi.bium.member.member.util.CookieUtil;
-import com.eodi.bium.member.member.util.RefreshTokenUtil;
+import com.eodi.bium.member.util.CookieUtil;
+import com.eodi.bium.member.util.RefreshTokenUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
