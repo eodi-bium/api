@@ -4,6 +4,7 @@ import com.eodi.bium.draw.api.EventService;
 import com.eodi.bium.draw.dto.request.EventJoinRequest;
 import com.eodi.bium.draw.dto.response.EventResponse;
 import com.eodi.bium.draw.dto.response.MyPointResponse;
+import com.eodi.bium.draw.dto.response.UserEventStatusResponse;
 import com.eodi.bium.global.annotation.AuthUserId;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,14 +21,14 @@ public class EventController {
 
     private final EventService eventService;
 
-    @GetMapping("/{id}/status")
-    public void getStatus(
+    @GetMapping("/{id}/my")
+    public UserEventStatusResponse getStatus(
         @AuthUserId
         String userId,
         @PathVariable("id")
         Long eventId
     ) {
-        eventService.getMyStatus(userId, eventId);
+        return eventService.getMyEventStatus(userId, eventId);
     }
 
     @PostMapping("/join")

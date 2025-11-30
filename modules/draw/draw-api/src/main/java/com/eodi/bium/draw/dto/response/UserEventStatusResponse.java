@@ -1,6 +1,6 @@
 package com.eodi.bium.draw.dto.response;
 
-public record UserEventStatus(
+public record UserEventStatusResponse(
     long myPoints,
     double winProbability
 ) {

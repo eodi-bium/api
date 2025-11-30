@@ -5,7 +5,8 @@ import com.eodi.bium.draw.dto.request.DrawEventAddRequest;
 import com.eodi.bium.draw.dto.request.EventJoinRequest;
 import com.eodi.bium.draw.dto.response.EventResponse;
 import com.eodi.bium.draw.dto.response.MyPointResponse;
-import com.eodi.bium.draw.dto.response.UserEventStatus;
+import com.eodi.bium.draw.dto.response.UserEventStatusResponse;
+import com.eodi.bium.draw.dto.view.EventStats;
 import com.eodi.bium.draw.entity.Event;
 import com.eodi.bium.draw.entity.EventJoin;
 import com.eodi.bium.draw.entity.MemberPoint;
@@ -43,8 +44,15 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public UserEventStatus getMyStatus(String userId, Long eventId) {
-        return null;
+    public UserEventStatusResponse getMyEventStatus(String userId, Long eventId) {
+        Long totalPoint = eventJoinRepository.getPointsByEventIdAndMemberId(eventId, userId);
+        EventStats eventStats = eventJoinRepository.getEventStatsByEventId(eventId);
+        return new UserEventStatusResponse(
+            totalPoint,
+            (double) Math.round(
+                (double) totalPoint / eventStats.totalAccumulatedPoints() * 100 * 10000)
+                / 10000
+        );
     }
 
     @Override
@@ -61,7 +69,9 @@ public class EventServiceImpl implements EventService {
         if (availableEvent == null) {
             throw new CustomException(ExceptionMessage.EVENT_NOT_FOUND);
         }
+        EventStats eventStats = eventJoinRepository.getEventStatsByEventId(availableEvent.getId());
         return new EventResponse(
+            availableEvent.getId(),
             availableEvent.getGiftName(),
             availableEvent.getCount(),
             availableEvent.getGiftImageUrl(),
@@ -71,8 +81,8 @@ public class EventServiceImpl implements EventService {
                 availableEvent.getAnnouncementDate()
             ),
             new EventResponse.EventStats(
-                0L,
-                0L
+                eventStats.totalAccumulatedPoints(),
+                eventStats.totalParticipants()
             )
         );
     }
