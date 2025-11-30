@@ -80,7 +80,7 @@ public class SecurityConfig {
                 JwtTokenAuthenticationFilter.class)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/memberInfo").authenticated()
+                .requestMatchers("/memberInfo").hasRole("USER")
                 .anyRequest().denyAll() // 이 필터 체인에 해당하지만 위에서 명시되지 않은 다른 모든 요청은 거부
             );
         return http.build();
