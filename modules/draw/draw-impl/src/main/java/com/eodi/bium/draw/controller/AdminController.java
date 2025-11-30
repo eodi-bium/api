@@ -1,11 +1,10 @@
 package com.eodi.bium.draw.controller;
 
 import com.eodi.bium.draw.api.EventService;
+import com.eodi.bium.draw.api.PointService;
 import com.eodi.bium.draw.dto.request.DrawEventAddRequest;
-import com.eodi.bium.draw.dto.response.EventResponse;
-import com.eodi.bium.global.annotation.AuthUserId;
+import com.eodi.bium.draw.dto.request.DrawPointRequest;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,21 +12,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/event")
-public class DrawEventController {
+@RequestMapping("/admin")
+public class AdminController {
 
     private final EventService eventService;
+    private final PointService pointService;
 
-    @PostMapping("/add")
+    @PostMapping("/event/add")
     public void addDrawEvent(@RequestBody DrawEventAddRequest request) {
         eventService.addEvent(request);
     }
 
-    @GetMapping("/lastest")
-    public EventResponse getEvent(
-        @AuthUserId
-        String userId
-    ) {
-        return eventService.getEvent(userId);
+    @PostMapping("/point/add")
+    public void addPoint(
+        @RequestBody DrawPointRequest drawPointRequest) {
+        pointService.addPoint(drawPointRequest);
     }
+//
+//    @PostMapping("/draw/start")
+//    public DrawResultResponse startDraw(@RequestBody DrawStartRequest drawStartRequest) {
+//        return drawService.startDraw(drawStartRequest);
+//    }
 }
