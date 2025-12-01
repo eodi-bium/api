@@ -3,6 +3,7 @@ package com.eodi.bium.draw.service;
 import com.eodi.bium.draw.api.EventService;
 import com.eodi.bium.draw.dto.request.DrawEventAddRequest;
 import com.eodi.bium.draw.dto.request.EventJoinRequest;
+import com.eodi.bium.draw.dto.response.EventRecord;
 import com.eodi.bium.draw.dto.response.EventResponse;
 import com.eodi.bium.draw.dto.response.MyPointResponse;
 import com.eodi.bium.draw.dto.response.UserEventStatusResponse;
@@ -15,6 +16,7 @@ import com.eodi.bium.draw.repsoitory.EventRepository;
 import com.eodi.bium.draw.repsoitory.MemberPointRepository;
 import com.eodi.bium.global.error.CustomException;
 import com.eodi.bium.global.error.ExceptionMessage;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,6 +105,11 @@ public class EventServiceImpl implements EventService {
             .count(request.count())
             .build();
         eventRepository.save(event);
+    }
+
+    @Override
+    public List<EventRecord> getEventWithMemberId(String memberId) {
+        return eventJoinRepository.findEventRecordsByMemberId(memberId);
     }
 }
 

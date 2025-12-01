@@ -1,6 +1,8 @@
 package com.eodi.bium.draw.repsoitory;
 
+import com.eodi.bium.draw.dto.response.EventRecord;
 import com.eodi.bium.draw.entity.EventJoin;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,4 +25,20 @@ public interface EventJoinRepository extends JpaRepository<EventJoin, Long> {
         WHERE ej.eventId = :eventId
         """)
     com.eodi.bium.draw.dto.view.EventStats getEventStatsByEventId(Long eventId);
+
+    @Query("""
+        SELECT new com.eodi.bium.draw.dto.response.EventRecord(
+            e.giftName, 
+            e.count, 
+            e.startDate, 
+            e.endDate, 
+            e.announcementDate, 
+            ej.point
+        ) 
+        FROM EventJoin ej 
+        JOIN Event e ON ej.eventId = e.id 
+        WHERE ej.memberId = :memberId 
+        ORDER BY ej.id DESC
+        """)
+    List<EventRecord> findEventRecordsByMemberId(String memberId);
 }
