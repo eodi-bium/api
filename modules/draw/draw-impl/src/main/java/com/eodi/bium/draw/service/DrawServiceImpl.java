@@ -4,12 +4,16 @@ import com.eodi.bium.draw.api.DrawService;
 import com.eodi.bium.draw.dto.request.DrawStartRequest;
 import com.eodi.bium.draw.dto.response.DrawResultResponse;
 import com.eodi.bium.draw.entity.Event;
+import com.eodi.bium.draw.entity.MemberPoint;
+import com.eodi.bium.draw.repsoitory.EventJoinRepository;
 import com.eodi.bium.draw.repsoitory.EventRepository;
+import com.eodi.bium.draw.repsoitory.MemberPointRepository;
 import com.eodi.bium.draw.repsoitory.PointAccumLogRepository;
 import com.eodi.bium.draw.view.DrawPointView;
 import com.eodi.bium.global.error.CustomException;
 import com.eodi.bium.global.error.ExceptionMessage;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +23,8 @@ public class DrawServiceImpl implements DrawService {
 
     private final EventRepository eventRepository;
     private final PointAccumLogRepository pointAccumLogRepository;
+    private final EventJoinRepository eventJoinRepository;
+    private final MemberPointRepository memberPointRepository;
 
     @Override
     public DrawResultResponse startDraw(DrawStartRequest request) {
@@ -28,7 +34,8 @@ public class DrawServiceImpl implements DrawService {
         if (event.getWinnerId() != null) {
             throw new CustomException(ExceptionMessage.DRAW_ALREADY_COMPLETED);
         }
-        List<DrawPointView> candidates = pointAccumLogRepository.findByEventId(request.eventId());
+        List<DrawPointView> candidates = eventJoinRepository.findCandidatesByEventId(
+            request.eventId());
         int totalWeight = 0;
         for (DrawPointView item : candidates) {
             totalWeight += item.point();
@@ -56,10 +63,24 @@ public class DrawServiceImpl implements DrawService {
                 System.out.println("당첨자 발생!!: " + item.memberId());
                 event.setWinnerId(item.memberId());
                 eventRepository.save(event);
+                rollbackPoints(request.eventId(), item.memberId());
                 return new DrawResultResponse(item.memberId());
             }
         }
 
         throw new CustomException(ExceptionMessage.INTERNAL_SERVER_ERROR);
+    }
+
+    private void rollbackPoints(Long eventId, String memberId) {
+        List<DrawPointView> notWinners = eventJoinRepository.findLosersByEventId(eventId, memberId);
+        for (DrawPointView item : notWinners) {
+            Optional<MemberPoint> byMemberId = memberPointRepository.findByMemberId(
+                item.memberId());
+            if (byMemberId.isPresent()) {
+                MemberPoint memberPoint = byMemberId.get();
+                memberPoint.setPoint(memberPoint.getPoint() + item.point());
+                memberPointRepository.save(memberPoint);
+            }
+        }
     }
 }
