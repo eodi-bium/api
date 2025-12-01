@@ -59,7 +59,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http,
         AuthenticationManager authenticationManager) throws Exception {
         http
-            .securityMatcher("/admin/**", "/memberInfo")
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -88,30 +87,7 @@ public class SecurityConfig {
             // URL 권한 설정 (순서 중요: 구체적인 것 -> 일반적인 것)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/memberInfo").hasRole("USER")
-                .anyRequest().denyAll() // 이 필터 체인에 해당하지만 위에서 명시되지 않은 다른 모든 요청은 거부
-            );
-        return http.build();
-    }
-
-    // JWT 필터 통하지 않는 것
-    @Bean
-    @Order(2)
-    public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(
-                session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .formLogin(AbstractHttpConfigurer::disable)
-            .httpBasic(AbstractHttpConfigurer::disable)
-            .exceptionHandling(ex -> ex
-                .authenticationEntryPoint((request, response, authException) -> {
-                    createUnauthorizedResponse(response);
-                })
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    createForbiddenResponse(response);
-                })
-                .requestMatchers("/test").authenticated()
+                .requestMatchers("/memberInfo").authenticated()
                 .anyRequest().permitAll()
             )
 
