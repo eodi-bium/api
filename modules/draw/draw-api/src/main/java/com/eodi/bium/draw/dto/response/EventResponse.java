@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 
 // 1. 전체 응답을 감싸는 Root Wrapper (JSON의 최상위 "data" 키 대응)
 public record EventResponse(
+    Long eventId,
     String giftName,
     Long count,
     String giftImageUrl,
     EventPeriod period,
-    EventStats stats,
-    UserEventStatus userStatus
+    EventStats stats
 ) {
 
     // 기간 정보
@@ -25,14 +25,6 @@ public record EventResponse(
     public record EventStats(
         long totalAccumulatedPoints,
         long totalParticipants
-    ) {
-
-    }
-
-    // 유저 상태 정보
-    public record UserEventStatus(
-        long myPoints,
-        double winProbability
     ) {
 
     }

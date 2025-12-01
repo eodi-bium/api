@@ -13,6 +13,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<CustomErrorResponse> handleCustomException(CustomException e) {
         log.error("Business exception occurred: {}", e.getMessage());
+        e.printStackTrace();
         return ResponseEntity.status(e.getHttpStatus())
             .body(new CustomErrorResponse(e.getMessage()));
     }
@@ -20,6 +21,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<CustomErrorResponse> handleUnknownException(Exception e) {
         log.error("Unexpected error occurred", e);
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(new CustomErrorResponse(ExceptionMessage.INTERNAL_SERVER_ERROR.getMessage()));
     }
