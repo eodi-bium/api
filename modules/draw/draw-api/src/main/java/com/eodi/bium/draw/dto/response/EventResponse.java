@@ -9,7 +9,8 @@ public record EventResponse(
     Long count,
     String giftImageUrl,
     EventPeriod period,
-    EventStats stats
+    EventStats stats,
+    String winner
 ) {
 
     // 기간 정보

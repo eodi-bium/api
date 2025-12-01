@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface EventJoinRepository extends JpaRepository<EventJoin, Long> {
 
     @Query("""
-            SELECT SUM(ej.point)
+            SELECT COALESCE(SUM(ej.point), 0)
             FROM EventJoin ej
             WHERE ej.eventId = :eventId AND ej.memberId = :memberId
         """)
@@ -19,7 +19,7 @@ public interface EventJoinRepository extends JpaRepository<EventJoin, Long> {
 
     @Query("""
         SELECT new com.eodi.bium.draw.dto.view.EventStats(
-          SUM(ej.point),
+          COALESCE(SUM(ej.point), 0),
           COUNT(DISTINCT  ej.memberId))
         FROM EventJoin ej
         WHERE ej.eventId = :eventId
