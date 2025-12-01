@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface PointAccumLogRepository extends JpaRepository<PointAccumLog, Long> {
 
     @Query("""
-            SELECT new com.eodi.bium.draw.view.DrawPointView(dp.memberId, SUM(dp.point))
+            SELECT new com.eodi.bium.draw.view.DrawPointView(dp.memberId, COALESCE(SUM(dp.point),0))
             FROM PointAccumLog dp
             GROUP BY dp.memberId
             HAVING SUM(dp.point) > 0

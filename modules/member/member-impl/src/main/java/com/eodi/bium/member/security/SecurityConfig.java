@@ -87,7 +87,7 @@ public class SecurityConfig {
             // URL 권한 설정 (순서 중요: 구체적인 것 -> 일반적인 것)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/test").authenticated()
+                .requestMatchers("/memberInfo").authenticated()
                 .anyRequest().permitAll()
             )
 
