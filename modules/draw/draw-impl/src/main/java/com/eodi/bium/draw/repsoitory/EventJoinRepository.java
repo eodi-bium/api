@@ -2,6 +2,7 @@ package com.eodi.bium.draw.repsoitory;
 
 import com.eodi.bium.draw.dto.response.EventRecord;
 import com.eodi.bium.draw.entity.EventJoin;
+import com.eodi.bium.draw.view.DrawPointView;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -41,4 +42,15 @@ public interface EventJoinRepository extends JpaRepository<EventJoin, Long> {
         ORDER BY ej.id DESC
         """)
     List<EventRecord> findEventRecordsByMemberId(String memberId);
+
+    @Query("""
+        SELECT new com.eodi.bium.draw.view.DrawPointView(
+            ej.memberId,
+            COALESCE(SUM(ej.point), 0)
+        )
+        FROM EventJoin ej
+        WHERE ej.eventId = :eventId
+        GROUP BY ej.memberId
+        """)
+    List<DrawPointView> findCandidatesByEventId(Long eventId);
 }

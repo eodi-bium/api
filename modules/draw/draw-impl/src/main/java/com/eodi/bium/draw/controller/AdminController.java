@@ -1,9 +1,12 @@
 package com.eodi.bium.draw.controller;
 
+import com.eodi.bium.draw.api.DrawService;
 import com.eodi.bium.draw.api.EventService;
 import com.eodi.bium.draw.api.PointService;
 import com.eodi.bium.draw.dto.request.DrawEventAddRequest;
 import com.eodi.bium.draw.dto.request.DrawPointRequest;
+import com.eodi.bium.draw.dto.request.DrawStartRequest;
+import com.eodi.bium.draw.dto.response.DrawResultResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +20,7 @@ public class AdminController {
 
     private final EventService eventService;
     private final PointService pointService;
+    private final DrawService drawService;
 
     @PostMapping("/event/add")
     public void addDrawEvent(@RequestBody DrawEventAddRequest request) {
@@ -28,9 +32,9 @@ public class AdminController {
         @RequestBody DrawPointRequest drawPointRequest) {
         pointService.addPoint(drawPointRequest);
     }
-//
-//    @PostMapping("/draw/start")
-//    public DrawResultResponse startDraw(@RequestBody DrawStartRequest drawStartRequest) {
-//        return drawService.startDraw(drawStartRequest);
-//    }
+
+    @PostMapping("/draw/start")
+    public DrawResultResponse startDraw(@RequestBody DrawStartRequest drawStartRequest) {
+        return drawService.startDraw(drawStartRequest);
+    }
 }

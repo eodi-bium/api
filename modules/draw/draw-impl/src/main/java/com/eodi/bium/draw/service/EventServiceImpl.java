@@ -67,25 +67,27 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventResponse getEvent() {
-        Event availableEvent = eventRepository.findAvailableEvent();
-        if (availableEvent == null) {
+        Event latestEvent = eventRepository.findTopByOrderByIdDesc();
+        if (latestEvent == null) {
             throw new CustomException(ExceptionMessage.EVENT_NOT_FOUND);
         }
-        EventStats eventStats = eventJoinRepository.getEventStatsByEventId(availableEvent.getId());
+        EventStats eventStats = eventJoinRepository.getEventStatsByEventId(latestEvent.getId());
+        String winner = eventRepository.findWinnerIdById(latestEvent.getId());
         return new EventResponse(
-            availableEvent.getId(),
-            availableEvent.getGiftName(),
-            availableEvent.getCount(),
-            availableEvent.getGiftImageUrl(),
+            latestEvent.getId(),
+            latestEvent.getGiftName(),
+            latestEvent.getCount(),
+            latestEvent.getGiftImageUrl(),
             new EventResponse.EventPeriod(
-                availableEvent.getStartDate(),
-                availableEvent.getEndDate(),
-                availableEvent.getAnnouncementDate()
+                latestEvent.getStartDate(),
+                latestEvent.getEndDate(),
+                latestEvent.getAnnouncementDate()
             ),
             new EventResponse.EventStats(
                 eventStats.totalAccumulatedPoints(),
                 eventStats.totalParticipants()
             )
+            , winner
         );
     }
 
