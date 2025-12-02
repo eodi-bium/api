@@ -78,7 +78,7 @@ public class SecurityConfig {
             // 필터 등록 (모든 요청에 대해 동작하지만, 헤더/쿠키가 없으면 내부 로직에서 통과됨)
             // 최적화된 생성자 적용 (Repository 제거됨)
             .addFilterBefore(
-                new JwtTokenAuthenticationFilter(authenticationManager),
+                new JwtTokenAuthenticationFilter(),
                 UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(
                 new RefreshRotationFilter(tokenRotationService),
