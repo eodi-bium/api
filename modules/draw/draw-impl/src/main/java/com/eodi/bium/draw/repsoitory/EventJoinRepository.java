@@ -46,21 +46,11 @@ public interface EventJoinRepository extends JpaRepository<EventJoin, Long> {
     @Query("""
         SELECT new com.eodi.bium.draw.view.DrawPointView(
             ej.memberId,
-            ej.point
+            COALESCE(SUM(ej.point), 0)
         )
         FROM EventJoin ej
-        WHERE ej.eventId = :eventId 
-          AND ej.memberId <> :winnerId
-        """)
-    List<DrawPointView> findLosersByEventId(Long eventId, String winnerId);
-
-    @Query("""
-        SELECT new com.eodi.bium.draw.view.DrawPointView(
-            ej.memberId,
-            ej.point
-        )
-        FROM EventJoin ej
-        WHERE ej.eventId = :eventId 
+        WHERE ej.eventId = :eventId
+        GROUP BY ej.memberId
         """)
     List<DrawPointView> findCandidatesByEventId(Long eventId);
 }
