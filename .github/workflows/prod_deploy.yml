@@ -80,4 +80,5 @@ jobs:
             docker run -d \
               --name ${{ env.CONTAINER_NAME }} \
               -p 8080:8080 \
+              -v /home/ec2-user/keystore.p12:/keystore.p12 \
               ${{ env.DOCKER_IMAGE }}:latest
