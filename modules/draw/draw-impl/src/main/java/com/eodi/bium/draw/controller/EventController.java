@@ -49,10 +49,10 @@ public class EventController {
         return eventService.getMyPoint(userId);
     }
 
-    @GetMapping("/lastest")
+    @GetMapping("/all")
     public EventResponse getEvent(
 
     ) {
-        return eventService.getEvent();
+        return eventService.getEvents();
     }
 }

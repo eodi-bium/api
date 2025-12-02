@@ -16,7 +16,7 @@ public interface EventService {
 
     void joinEvent(String memberId, EventJoinRequest request);
 
-    EventResponse getEvent();
+    EventResponse getEvents();
 
     void addEvent(DrawEventAddRequest request);
 
