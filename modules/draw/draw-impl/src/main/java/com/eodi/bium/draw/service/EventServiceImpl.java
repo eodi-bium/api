@@ -5,6 +5,7 @@ import com.eodi.bium.draw.dto.request.DrawEventAddRequest;
 import com.eodi.bium.draw.dto.request.EventJoinRequest;
 import com.eodi.bium.draw.dto.response.EventRecord;
 import com.eodi.bium.draw.dto.response.EventResponse;
+import com.eodi.bium.draw.dto.response.EventResponse.SingleEventResponse;
 import com.eodi.bium.draw.dto.response.MyPointResponse;
 import com.eodi.bium.draw.dto.response.UserEventStatusResponse;
 import com.eodi.bium.draw.dto.view.EventStats;
@@ -66,38 +67,39 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventResponse getEvent() {
-        Event latestEvent = eventRepository.findTopByOrderByIdDesc();
-        if (latestEvent == null) {
+    public EventResponse getEvents() {
+        List<Event> events = eventRepository.findAllByOrderByIdDesc();
+        if (events.isEmpty()) {
             throw new CustomException(ExceptionMessage.EVENT_NOT_FOUND);
         }
-        EventStats eventStats = eventJoinRepository.getEventStatsByEventId(latestEvent.getId());
-        String winner = eventRepository.findWinnerIdById(latestEvent.getId());
-        return new EventResponse(
-            latestEvent.getId(),
-            latestEvent.getGiftName(),
-            latestEvent.getCount(),
-            latestEvent.getGiftImageUrl(),
+        List<SingleEventResponse> singleEventResponses = events.stream()
+            .map(this::convertToSingleEventResponse)
+            .toList();
+        return new EventResponse(singleEventResponses);
+    }
+
+    private SingleEventResponse convertToSingleEventResponse(Event event) {
+        EventStats eventStats = eventJoinRepository.getEventStatsByEventId(event.getId());
+        return new SingleEventResponse(
+            event.getId(),
+            event.getGiftName(),
+            event.getCount(),
+            event.getGiftImageUrl(),
             new EventResponse.EventPeriod(
-                latestEvent.getStartDate(),
-                latestEvent.getEndDate(),
-                latestEvent.getAnnouncementDate()
+                event.getStartDate(),
+                event.getEndDate(),
+                event.getAnnouncementDate()
             ),
             new EventResponse.EventStats(
                 eventStats.totalAccumulatedPoints(),
                 eventStats.totalParticipants()
-            )
-            , winner
+            ),
+            event.getWinnerId()
         );
     }
 
     @Override
     public void addEvent(DrawEventAddRequest request) {
-
-        if (eventRepository.findAvailableEvent() != null) {
-            throw new CustomException(ExceptionMessage.EVENT_ALREADY_ONGOING);
-        }
-
         Event event = Event.builder()
             .giftName(request.giftName())
             .giftImageUrl(request.giftImageUrl())
