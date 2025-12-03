@@ -98,6 +98,13 @@ public class SecurityConfig {
             .oauth2Login(oauth -> oauth
                 .userInfoEndpoint(user -> user.userService(principalOauth2UserService))
                 .successHandler(oAuth2LoginSuccessHandler)
+                .failureHandler((request, response, exception) -> {
+                    System.out.println("OAuth2 로그인 실패: " + exception.getMessage());
+                    exception.printStackTrace(); // 서버 로그에 스택트레이스 출력
+
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("OAuth2 Login Failed: " + exception.getMessage());
+                })
             );
 
         return http.build();
