@@ -4,6 +4,8 @@ import com.eodi.bium.draw.dto.response.EventRecord;
 import com.eodi.bium.draw.entity.EventJoin;
 import com.eodi.bium.draw.view.DrawPointView;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -42,7 +44,7 @@ public interface EventJoinRepository extends JpaRepository<EventJoin, Long> {
             GROUP BY e.id
             ORDER BY MAX(ej.id) DESC
         """)
-    List<EventRecord> findEventRecordsByMemberId(String memberId);
+    Slice<EventRecord> findEventRecordsByMemberId(String memberId, Pageable pageable);
 
     @Query("""
         SELECT new com.eodi.bium.draw.view.DrawPointView(

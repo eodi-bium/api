@@ -19,6 +19,9 @@ import com.eodi.bium.global.error.CustomException;
 import com.eodi.bium.global.error.ExceptionMessage;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -113,8 +116,8 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    public List<EventRecord> getEventWithMemberId(String memberId) {
-        return eventJoinRepository.findEventRecordsByMemberId(memberId);
+    public Slice<EventRecord> getEventWithMemberId(String memberId, Pageable pageable) {
+        return eventJoinRepository.findEventRecordsByMemberId(memberId, pageable);
     }
 }
 
