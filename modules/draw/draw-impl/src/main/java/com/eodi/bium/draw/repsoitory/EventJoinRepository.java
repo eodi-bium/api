@@ -28,19 +28,19 @@ public interface EventJoinRepository extends JpaRepository<EventJoin, Long> {
     com.eodi.bium.draw.dto.view.EventStats getEventStatsByEventId(Long eventId);
 
     @Query("""
-        SELECT new com.eodi.bium.draw.dto.response.EventRecord(
-            e.giftName, 
-            e.count, 
-            e.startDate, 
-            e.endDate, 
-            e.announcementDate, 
-            SUM(ej.point)
-        ) 
-        FROM EventJoin ej 
-        JOIN Event e ON ej.eventId = e.id 
-        WHERE ej.memberId = :memberId 
-        GROUP BY e.id, e.giftName, e.count, e.startDate, e.endDate, e.announcementDate
-        ORDER BY e.endDate DESC
+            SELECT new com.eodi.bium.draw.dto.response.EventRecord(
+                e.giftName,
+                e.count,
+                e.startDate,
+                e.endDate,
+                e.announcementDate,
+                COALESCE(SUM(ej.point),0)
+            )
+            FROM EventJoin ej
+            JOIN Event e ON ej.eventId = e.id
+            WHERE ej.memberId = :memberId
+            GROUP BY e.id
+            ORDER BY MAX(ej.id) DESC
         """)
     List<EventRecord> findEventRecordsByMemberId(String memberId);
 
