@@ -26,6 +26,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class RefreshRotationFilter extends OncePerRequestFilter {
 
     private static final String BEARER_PREFIX = "Bearer ";
+    private final JwtProperties jwtProperties;
+    private final CookieUtil cookieUtil;
     private final TokenRotationService tokenRotationService;
     // private final MemberRepository memberRepository; // [제거] 더 이상 필요 없음
 
@@ -50,7 +52,7 @@ public class RefreshRotationFilter extends OncePerRequestFilter {
         if (auth != null && auth.startsWith(BEARER_PREFIX)) {
             String at = auth.substring(BEARER_PREFIX.length());
             try {
-                JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(at);
+                JWT.require(Algorithm.HMAC512(jwtProperties.secret)).build().verify(at);
                 isAccessTokenValid = true;
             } catch (Exception e) {
                 isAccessTokenValid = false;
@@ -63,7 +65,7 @@ public class RefreshRotationFilter extends OncePerRequestFilter {
         }
 
         // 2. Refresh Token 확인 및 Rotation
-        var rtCookie = CookieUtil.getCookie(request, "refresh_token").orElse(null);
+        var rtCookie = cookieUtil.getCookie(request, "refresh_token").orElse(null);
         if (rtCookie == null) {
             filterChain.doFilter(request, response);
             return;
@@ -79,7 +81,7 @@ public class RefreshRotationFilter extends OncePerRequestFilter {
             // =================================================================
 
             // 1. 새 토큰 디코딩
-            DecodedJWT decoded = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build()
+            DecodedJWT decoded = JWT.require(Algorithm.HMAC512(jwtProperties.secret)).build()
                 .verify(newAt);
 
             // 2. Claim에서 ID와 Role 추출

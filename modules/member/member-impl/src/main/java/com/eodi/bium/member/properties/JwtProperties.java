@@ -1,31 +1,20 @@
 package com.eodi.bium.member.properties;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
+@Setter
 @ConfigurationProperties(prefix = "jwt")
 public class JwtProperties {
 
-    public static String SECRET;
-    public static long ACCESS_EXPIRATION_TIME; // ms
-    public static long REFRESH_EXPIRATION_TIME; // s
-    private String secret;
-    private long accessExpirationTime; // s
-    private long refreshExpirationTime; // s
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-        SECRET = secret;
-    }
+    public long accessExpirationTime;
+    public String secret;
+    public long refreshExpirationTime;
+    private String frontEndDeployUrl;
 
     public void setAccessExpirationTime(long seconds) {
-        this.accessExpirationTime = seconds;
-        ACCESS_EXPIRATION_TIME = seconds * 1000; // ms 변경
-    }
-
-    public void setRefreshExpirationTime(long seconds) {
-        this.refreshExpirationTime = seconds;
-        REFRESH_EXPIRATION_TIME = seconds;
+        accessExpirationTime = seconds * 1000; // ms 변경
     }
 }

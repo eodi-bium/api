@@ -4,6 +4,7 @@ import com.eodi.bium.global.error.ExceptionMessage;
 import com.eodi.bium.member.component.AccessTokenHandler;
 import com.eodi.bium.member.dto.response.AtResponse;
 import com.eodi.bium.member.entity.Member;
+import com.eodi.bium.member.properties.JwtProperties;
 import com.eodi.bium.member.repository.MemberRepository;
 import com.eodi.bium.member.security.filter.JwtTokenAuthenticationFilter;
 import com.eodi.bium.member.security.filter.RefreshRotationFilter;
@@ -45,8 +46,10 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class SecurityConfig {
 
+    private final JwtProperties jwtProperties;
     private final PrincipalOAuth2UserService principalOauth2UserService;
     private final TokenRotationService tokenRotationService;
+    private final CookieUtil cookieUtil;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
     @Bean
@@ -78,10 +81,10 @@ public class SecurityConfig {
             // 필터 등록 (모든 요청에 대해 동작하지만, 헤더/쿠키가 없으면 내부 로직에서 통과됨)
             // 최적화된 생성자 적용 (Repository 제거됨)
             .addFilterBefore(
-                new JwtTokenAuthenticationFilter(),
+                new JwtTokenAuthenticationFilter(jwtProperties),
                 UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(
-                new RefreshRotationFilter(tokenRotationService),
+                new RefreshRotationFilter(jwtProperties, cookieUtil, tokenRotationService),
                 JwtTokenAuthenticationFilter.class)
 
             // URL 권한 설정 (순서 중요: 구체적인 것 -> 일반적인 것)
@@ -185,19 +188,12 @@ public class SecurityConfig {
     @RequiredArgsConstructor
     public static class TokenRotationService {
 
+        private final CookieUtil cookieUtil;
         private final RefreshTokenUtil refreshTokenUtil;
         private final AccessTokenHandler accessTokenHandler;
 
         public void issueRefreshToken(String userId, HttpServletResponse response) {
             String newRtPlain = refreshTokenUtil.issue(userId);
-            setRefreshToken(response, newRtPlain);
-        }
-
-        public void issueTokens(String userId, HttpServletResponse response) {
-            String newRtPlain = refreshTokenUtil.issue(userId);
-            String newAt = accessTokenHandler.validateAndGenerate(userId);
-
-            setAccessToken(response, newAt);
             setRefreshToken(response, newRtPlain);
         }
 
@@ -216,7 +212,7 @@ public class SecurityConfig {
 
         private void setRefreshToken(HttpServletResponse response, String newRtPlain) {
             response.setHeader(HttpHeaders.SET_COOKIE,
-                CookieUtil.buildCookies(newRtPlain).toString());
+                cookieUtil.buildCookies(newRtPlain).toString());
         }
     }
 }

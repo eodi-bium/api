@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/member")
 public class MemberController {
 
+    private final CookieUtil cookieUtil;
     private final TokenRotationService tokenRotationService;
     private final LogoutService logoutService;
 
@@ -25,7 +26,7 @@ public class MemberController {
     @PostMapping("/refresh")
     public ResponseEntity<AtResponse> refresh(HttpServletRequest request,
         HttpServletResponse response) {
-        Cookie rtCookie = CookieUtil.getCookie(request, "refresh_token").orElse(null);
+        Cookie rtCookie = cookieUtil.getCookie(request, "refresh_token").orElse(null);
         return ResponseEntity.ok(tokenRotationService.rotateTokens(rtCookie.getValue(), response));
     }
 
