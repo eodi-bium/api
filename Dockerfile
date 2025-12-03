@@ -37,4 +37,4 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 COPY --from=builder /project/modules/app/build/libs/*.jar app.jar
 
 # 실행
-ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=prod","-Djavax.net.debug=ssl:handshake", "-jar", "app.jar"]
