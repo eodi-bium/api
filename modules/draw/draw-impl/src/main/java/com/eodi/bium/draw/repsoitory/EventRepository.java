@@ -12,6 +12,4 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findAllByOrderByIdDesc();
 
-    @Query("SELECT e.winnerId FROM Event e WHERE e.id = :eventId")
-    String findWinnerIdById(Long eventId);
 }
