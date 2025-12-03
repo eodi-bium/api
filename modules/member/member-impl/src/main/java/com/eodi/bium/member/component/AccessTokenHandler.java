@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AccessTokenHandler {
 
+    private final JwtProperties jwtProperties;
     private final MemberRepository memberRepository;
 
     public String validateAndGenerate(String memberId) {
@@ -24,8 +25,8 @@ public class AccessTokenHandler {
                 .withClaim("role", member.getRole())
                 .withClaim("nickname", member.getNickname())
                 .withExpiresAt(
-                    new Date(System.currentTimeMillis() + JwtProperties.ACCESS_EXPIRATION_TIME))
-                .sign(Algorithm.HMAC512(JwtProperties.SECRET)))
+                    new Date(System.currentTimeMillis() + jwtProperties.accessExpirationTime))
+                .sign(Algorithm.HMAC512(jwtProperties.secret)))
             .orElseThrow(() -> new CustomException(ExceptionMessage.USER_NOT_FOUND));
     }
 }
