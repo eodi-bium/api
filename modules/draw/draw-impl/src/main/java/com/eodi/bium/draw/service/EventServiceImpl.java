@@ -111,6 +111,7 @@ public class EventServiceImpl implements EventService {
         eventRepository.save(event);
     }
 
+
     @Override
     public List<EventRecord> getEventWithMemberId(String memberId) {
         return eventJoinRepository.findEventRecordsByMemberId(memberId);

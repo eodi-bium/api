@@ -34,12 +34,13 @@ public interface EventJoinRepository extends JpaRepository<EventJoin, Long> {
             e.startDate, 
             e.endDate, 
             e.announcementDate, 
-            ej.point
+            SUM(ej.point)
         ) 
         FROM EventJoin ej 
         JOIN Event e ON ej.eventId = e.id 
         WHERE ej.memberId = :memberId 
-        ORDER BY ej.id DESC
+        GROUP BY e.id, e.giftName, e.count, e.startDate, e.endDate, e.announcementDate
+        ORDER BY e.endDate DESC
         """)
     List<EventRecord> findEventRecordsByMemberId(String memberId);
 
