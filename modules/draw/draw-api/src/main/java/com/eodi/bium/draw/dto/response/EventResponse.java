@@ -2,10 +2,11 @@ package com.eodi.bium.draw.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 // 1. 전체 응답을 감싸는 Root Wrapper (JSON의 최상위 "data" 키 대응)
 public record EventResponse(
-    List<SingleEventResponse> events
+    Page<SingleEventResponse> events
 ) {
 
     public record SingleEventResponse(

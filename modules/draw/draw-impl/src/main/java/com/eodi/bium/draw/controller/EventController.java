@@ -7,6 +7,9 @@ import com.eodi.bium.draw.dto.response.MyPointResponse;
 import com.eodi.bium.draw.dto.response.UserEventStatusResponse;
 import com.eodi.bium.global.annotation.AuthUserId;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,8 +54,9 @@ public class EventController {
 
     @GetMapping("/all")
     public EventResponse getEvent(
-
+        @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+        Pageable pageable
     ) {
-        return eventService.getEvents();
+        return eventService.getEvents(pageable);
     }
 }

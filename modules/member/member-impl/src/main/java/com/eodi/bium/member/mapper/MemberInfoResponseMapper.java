@@ -17,8 +17,6 @@ public class MemberInfoResponseMapper {
     public static MemberInfoResponse fromDrawResponse(Member member,
         List<TrashRecordResponse> records, Slice<EventRecord> eventRecords) {
 
-        // 1. [TrashRecord] 통계 로직 (기존 유지)
-        // List로 받아 메모리에서 합계를 계산합니다.
         Map<RecyclingType, Long> recyclingCounts = records.stream()
             .collect(Collectors.groupingBy(
                 TrashRecordResponse::recyclingType,
@@ -33,9 +31,6 @@ public class MemberInfoResponseMapper {
             ))
             .toList();
 
-        // 2. [EventRecord] Slice 변환 로직 (변경됨)
-        // stream()을 쓰지 않고 Slice 인터페이스의 map()을 바로 사용합니다.
-        // 이렇게 해야 페이징 메타데이터(hasNext 등)가 유지됩니다.
         Slice<SingleEventRecord> eventRecordDtos = eventRecords.map(single ->
             new SingleEventRecord(
                 single.name(),

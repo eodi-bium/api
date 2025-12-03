@@ -1,4 +1,4 @@
-package com.eodi.bium.draw.repsoitory;
+package com.eodi.bium.draw.repository;
 
 import com.eodi.bium.draw.dto.response.EventRecord;
 import com.eodi.bium.draw.entity.EventJoin;

@@ -18,7 +18,7 @@ public interface EventService {
 
     void joinEvent(String memberId, EventJoinRequest request);
 
-    EventResponse getEvents();
+    EventResponse getEvents(Pageable pageable);
 
     void addEvent(DrawEventAddRequest request);
 

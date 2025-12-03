@@ -3,7 +3,7 @@ package com.eodi.bium.draw.service;
 import com.eodi.bium.draw.api.TrashRecordService;
 import com.eodi.bium.draw.dto.response.TrashRecordResponse;
 import com.eodi.bium.draw.entity.TrashRecord;
-import com.eodi.bium.draw.repsoitory.TrashRecordRepository;
+import com.eodi.bium.draw.repository.TrashRecordRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
