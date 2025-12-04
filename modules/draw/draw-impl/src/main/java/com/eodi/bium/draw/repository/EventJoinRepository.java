@@ -1,9 +1,11 @@
-package com.eodi.bium.draw.repsoitory;
+package com.eodi.bium.draw.repository;
 
 import com.eodi.bium.draw.dto.response.EventRecord;
 import com.eodi.bium.draw.entity.EventJoin;
 import com.eodi.bium.draw.view.DrawPointView;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -28,20 +30,21 @@ public interface EventJoinRepository extends JpaRepository<EventJoin, Long> {
     com.eodi.bium.draw.dto.view.EventStats getEventStatsByEventId(Long eventId);
 
     @Query("""
-        SELECT new com.eodi.bium.draw.dto.response.EventRecord(
-            e.giftName, 
-            e.count, 
-            e.startDate, 
-            e.endDate, 
-            e.announcementDate, 
-            ej.point
-        ) 
-        FROM EventJoin ej 
-        JOIN Event e ON ej.eventId = e.id 
-        WHERE ej.memberId = :memberId 
-        ORDER BY ej.id DESC
+            SELECT new com.eodi.bium.draw.dto.response.EventRecord(
+                e.giftName,
+                e.count,
+                e.startDate,
+                e.endDate,
+                e.announcementDate,
+                COALESCE(SUM(ej.point),0)
+            )
+            FROM EventJoin ej
+            JOIN Event e ON ej.eventId = e.id
+            WHERE ej.memberId = :memberId
+            GROUP BY e.id
+            ORDER BY MAX(ej.id) DESC
         """)
-    List<EventRecord> findEventRecordsByMemberId(String memberId);
+    Slice<EventRecord> findEventRecordsByMemberId(String memberId, Pageable pageable);
 
     @Query("""
         SELECT new com.eodi.bium.draw.view.DrawPointView(

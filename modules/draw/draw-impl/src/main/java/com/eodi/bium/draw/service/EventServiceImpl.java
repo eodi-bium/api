@@ -12,13 +12,17 @@ import com.eodi.bium.draw.dto.view.EventStats;
 import com.eodi.bium.draw.entity.Event;
 import com.eodi.bium.draw.entity.EventJoin;
 import com.eodi.bium.draw.entity.MemberPoint;
-import com.eodi.bium.draw.repsoitory.EventJoinRepository;
-import com.eodi.bium.draw.repsoitory.EventRepository;
-import com.eodi.bium.draw.repsoitory.MemberPointRepository;
+import com.eodi.bium.draw.repository.EventJoinRepository;
+import com.eodi.bium.draw.repository.EventRepository;
+import com.eodi.bium.draw.repository.MemberPointRepository;
 import com.eodi.bium.global.error.CustomException;
 import com.eodi.bium.global.error.ExceptionMessage;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,14 +71,10 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventResponse getEvents() {
-        List<Event> events = eventRepository.findAllByOrderByIdDesc();
-        if (events.isEmpty()) {
-            throw new CustomException(ExceptionMessage.EVENT_NOT_FOUND);
-        }
-        List<SingleEventResponse> singleEventResponses = events.stream()
-            .map(this::convertToSingleEventResponse)
-            .toList();
+    public EventResponse getEvents(Pageable pageable) {
+        Page<Event> eventPage = eventRepository.findAll(pageable);
+        Page<SingleEventResponse> singleEventResponses = eventPage.map(
+            this::convertToSingleEventResponse);
         return new EventResponse(singleEventResponses);
     }
 
@@ -111,9 +111,10 @@ public class EventServiceImpl implements EventService {
         eventRepository.save(event);
     }
 
+
     @Override
-    public List<EventRecord> getEventWithMemberId(String memberId) {
-        return eventJoinRepository.findEventRecordsByMemberId(memberId);
+    public Slice<EventRecord> getEventWithMemberId(String memberId, Pageable pageable) {
+        return eventJoinRepository.findEventRecordsByMemberId(memberId, pageable);
     }
 }
 

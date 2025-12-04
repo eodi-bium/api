@@ -7,6 +7,8 @@ import com.eodi.bium.draw.dto.response.EventResponse;
 import com.eodi.bium.draw.dto.response.MyPointResponse;
 import com.eodi.bium.draw.dto.response.UserEventStatusResponse;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 public interface EventService {
 
@@ -16,10 +18,10 @@ public interface EventService {
 
     void joinEvent(String memberId, EventJoinRequest request);
 
-    EventResponse getEvents();
+    EventResponse getEvents(Pageable pageable);
 
     void addEvent(DrawEventAddRequest request);
 
-    List<EventRecord> getEventWithMemberId(String memberId);
+    Slice<EventRecord> getEventWithMemberId(String memberId, Pageable pageable);
 }
 

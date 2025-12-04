@@ -10,30 +10,42 @@ import com.eodi.bium.member.entity.Member;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Slice;
 
 public class MemberInfoResponseMapper {
 
     public static MemberInfoResponse fromDrawResponse(Member member,
-        List<TrashRecordResponse> records, List<EventRecord> eventRecords) {
-        // type별 count
+        List<TrashRecordResponse> records, Slice<EventRecord> eventRecords) {
+
         Map<RecyclingType, Long> recyclingCounts = records.stream()
             .collect(Collectors.groupingBy(
                 TrashRecordResponse::recyclingType,
                 Collectors.summingLong(TrashRecordResponse::count)
             ));
 
-        // dto로 변환
         List<RecyclingRecord> recyclingRecords = recyclingCounts.entrySet().stream()
-            .map(single -> new RecyclingRecord(single.getKey(), single.getValue(),
-                single.getKey().getPoint() * single.getValue()))
+            .map(single -> new RecyclingRecord(
+                single.getKey(),
+                single.getValue(),
+                single.getKey().getPoint() * single.getValue()
+            ))
             .toList();
 
-        List<SingleEventRecord> eventRecordDtos = eventRecords.stream()
-            .map(single -> new SingleEventRecord(single.name(), single.giftCount(),
-                single.startDate(), single.endDate(), single.announceDate(),
-                single.myPoint())).toList();
+        Slice<SingleEventRecord> eventRecordDtos = eventRecords.map(single ->
+            new SingleEventRecord(
+                single.name(),
+                single.giftCount(),
+                single.startDate(),
+                single.endDate(),
+                single.announceDate(),
+                single.myPoint()
+            )
+        );
 
         return new MemberInfoResponse(
-            member.getNickname(), recyclingRecords, eventRecordDtos);
+            member.getNickname(),
+            recyclingRecords,
+            eventRecordDtos
+        );
     }
 }
