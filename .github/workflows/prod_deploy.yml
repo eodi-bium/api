@@ -6,6 +6,7 @@ on:
       - CSE-25-blue-green
   workflow_dispatch:
 
+
 env:
   DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/inha-capstone-server
   CONTAINER_NAME: inha-capstone-server
