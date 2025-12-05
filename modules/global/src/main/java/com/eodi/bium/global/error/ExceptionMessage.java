@@ -15,6 +15,7 @@ public enum ExceptionMessage {
     TOKEN_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "토큰 생성 중 서버 오류가 발생했습니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."),
     NOT_ENOUGH_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 부족합니다."),
+    NOT_FOUND_RT(HttpStatus.UNAUTHORIZED, "refreshToken이 존재하지 않습니다"),
 
     INSUFFICIENT_POINTS(HttpStatus.BAD_REQUEST, "포인트가 부족합니다."),
     EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "이벤트를 찾을 수 없습니다."),

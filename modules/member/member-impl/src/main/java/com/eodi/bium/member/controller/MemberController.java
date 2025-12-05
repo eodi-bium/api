@@ -1,5 +1,7 @@
 package com.eodi.bium.member.controller;
 
+import com.eodi.bium.global.error.CustomException;
+import com.eodi.bium.global.error.ExceptionMessage;
 import com.eodi.bium.member.dto.response.AtResponse;
 import com.eodi.bium.member.security.SecurityConfig.TokenRotationService;
 import com.eodi.bium.member.service.LogoutService;
@@ -8,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +30,9 @@ public class MemberController {
     public ResponseEntity<AtResponse> refresh(HttpServletRequest request,
         HttpServletResponse response) {
         Cookie rtCookie = cookieUtil.getCookie(request, "refresh_token").orElse(null);
+        if (rtCookie == null) {
+            throw new CustomException(ExceptionMessage.NOT_FOUND_RT);
+        }
         return ResponseEntity.ok(tokenRotationService.rotateTokens(rtCookie.getValue(), response));
     }
 
