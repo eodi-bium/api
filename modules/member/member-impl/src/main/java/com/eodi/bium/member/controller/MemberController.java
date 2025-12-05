@@ -29,15 +29,7 @@ public class MemberController {
     @PostMapping("/refresh")
     public ResponseEntity<AtResponse> refresh(HttpServletRequest request,
         HttpServletResponse response) {
-        String scheme = request.getScheme();
-        boolean isSecure = request.isSecure();
-        String remoteAddr = request.getRemoteAddr();
-
-        System.out.println("=== Spring Identity Check ===");
-        System.out.println("Scheme: " + scheme);       // http 또는 https
-        System.out.println("isSecure: " + isSecure);   // false 또는 true
-        System.out.println("Real IP?: " + remoteAddr); // 127.0.0.1 또는 실제 IP
-        System.out.println("=============================");
+        
         Cookie rtCookie = cookieUtil.getCookie(request, "refresh_token").orElse(null);
         if (rtCookie == null) {
             throw new CustomException(ExceptionMessage.NOT_FOUND_RT);
