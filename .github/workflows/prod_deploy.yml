@@ -3,7 +3,7 @@ name: Deploy to EC2 (Spring Boot + Docker + blue/green)
 on:
   push:
     branches:
-      - CSE-25-blue-green
+      - main
   workflow_dispatch:
 
 env:
