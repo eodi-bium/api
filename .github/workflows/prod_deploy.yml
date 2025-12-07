@@ -1,4 +1,4 @@
-name: Deploy to EC2 (Spring Boot + Docker)
+name: Deploy to EC2 (Spring Boot + Docker + blue/green)
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 env:
   DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/inha-capstone-server
-  CONTAINER_NAME: inha-capstone-server
+  BASE_CONTAINER_NAME: inha-capstone-server
 
 jobs:
   # =========================================================
@@ -47,7 +47,7 @@ jobs:
           tags: ${{ env.DOCKER_IMAGE }}:latest
 
   # =========================================================
-  # JOB 2: EC2 배포
+  # JOB 2: EC2 blue/green 배포
   # =========================================================
   deploy:
     name: Deploy to EC2
@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: EC2 접속 및 배포
+      - name: EC2 접속 및 배포 (blue/green)
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -69,17 +69,68 @@ jobs:
             # 2. 최신 이미지 받기
             docker pull ${{ env.DOCKER_IMAGE }}:latest
             
-            # 3. 기존 컨테이너 중지 및 삭제 (에러 무시)
-            docker stop ${{ env.CONTAINER_NAME }} || true
-            docker rm ${{ env.CONTAINER_NAME }} || true
+            # 3. 현재 실행 중인 포트 확인 => 기본값은 8080으로 간주
+            CURRENT_PORT=$(cat /etc/nginx/conf.d/service-url.inc | grep -o '[0-9]*' | tail -1)
             
-            # 4. 불필요한 이미지 정리
-            docker image prune -f
+            # 3.1 파일이 없거니 비어있다 -> 8080이라 생각
+            if [ -z "$CURRENT_PORT" ]; then
+              CURRENT_PORT=8080
+            fi
+
+            # 3.2 현재가 8080이면 다음은 8081
+            if [ "$CURRENT_PORT" -eq 8080 ]; then
+              TARGET_PORT=8081
+              TARGET_COLOR="green"
+              STOP_COLOR="blue"
+            else # 3.2 현재가 8081이면 다음은 8080
+              TARGET_PORT=8080
+              TARGET_COLOR="blue"
+              STOP_COLOR="green"
+            fi
             
-            # 5. 새 컨테이너 실행 (환경변수 주입 필요시 -e 옵션 추가)
+            TARGET_CONTAINER_NAME="${{ env.BASE_CONTAINER_NAME }}-${TARGET_COLOR}"
+            echo "Current Port: $CURRENT_PORT ($STOP_COLOR)"
+            echo "Target Port: $TARGET_PORT ($TARGET_COLOR)"
+            echo "Target Container: $TARGET_CONTAINER_NAME"
+
+            # 4. 타겟 컨테이너 정리 및 실행
+            docker stop $TARGET_CONTAINER_NAME || true
+            docker rm $TARGET_CONTAINER_NAME || true
+            
             docker run -d \
-              --name ${{ env.CONTAINER_NAME }} \
-              --network host \
-              -p 8080:8080 \
-              -v /home/ec2-user/keystore.p12:/keystore.p12 \
+              --name $TARGET_CONTAINER_NAME \
+              -p ${TARGET_PORT}:8080 \
+              -e TZ=Asia/Seoul \
               ${{ env.DOCKER_IMAGE }}:latest
+            
+            # 5. 타겟 컨테이너 헬스체크 -> 20번 체크
+            for i in {1..20}; do
+              RESPONSE=$(curl -s http://127.0.0.1:${TARGET_PORT}/actuator/health | grep 'UP' || true)
+
+              if [ -n "$RESPONSE" ]; then
+                echo "Health Check Success! ($TARGET_COLOR is UP)"
+                break
+              fi
+
+              echo "Waiting for service to start... ($i/20)"
+              sleep 5
+            done
+            
+            # 5.1 만일 헬스체크 실패 -> 배포 중단하고 현 서버 유지
+            if [ -z "$RESPONSE" ]; then
+              echo "Health Check Failed. Deployment Aborted."
+              docker stop $TARGET_CONTAINER_NAME
+              exit 1
+            fi
+            
+            # 6. 트래픽 전환 -> nginx reload
+            echo "Switching Traffic to $TARGET_PORT..."
+            echo "set \$service_url http://127.0.0.1:${TARGET_PORT};" | sudo tee /etc/nginx/conf.d/service-url.inc
+            sudo service nginx reload # nginx 설정 재로딩
+            
+            # 7. 이전 버전 중단
+            echo "Stopping old container ($STOP_COLOR)..."
+            STOP_CONTAINER_NAME="${{ env.BASE_CONTAINER_NAME }}-${STOP_COLOR}"
+            docker stop $STOP_CONTAINER_NAME || true
+            docker rm $STOP_CONTAINER_NAME || true
+            docker image prune -f
